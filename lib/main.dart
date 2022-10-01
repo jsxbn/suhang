@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:suhang/imageviewer.dart';
 import 'package:suhang/splashUI.dart';
 import 'package:suhang/su.dart';
 import 'firebase_options.dart';
@@ -156,7 +157,7 @@ class _RootpageState extends State<Rootpage> {
                     color: Colors.transparent,
                     child: IconButton(
                       splashRadius: 30,
-                      onPressed: () {},
+                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => imageviewer()));},
                       icon: Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: Color(maintxt[index % 3]),
@@ -919,7 +920,7 @@ class _RootpageState extends State<Rootpage> {
                               ),
                               const SizedBox(height: 10),
                               ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: suData.length,
                                   itemBuilder:
