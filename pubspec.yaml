@@ -40,6 +40,7 @@ dependencies:
   intl: ^0.17.0
   date_picker_timeline: ^1.2.3
   firebase_core_web: ^1.7.2
+  lottie: ^1.4.2
 
 flutter_icons:
   android: "ic_launcher"
