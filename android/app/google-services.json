@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "37680523976",
+    "project_id": "leebanstudio",
+    "storage_bucket": "leebanstudio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37680523976:android:0347edb59d4b84a12553fd",
+        "android_client_info": {
+          "package_name": "com.leeban.suhang"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37680523976-b7oo81ik1igcmbfh5065serrltg8t01m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuGx7nJjf3tXtSGgvXJJl0vSy31sgTEHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37680523976-b7oo81ik1igcmbfh5065serrltg8t01m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "37680523976-gtsi53m4gpn36uj6h3jri260fqhb6tkr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quest.firstapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
