@@ -157,7 +157,7 @@ class _RootpageState extends State<Rootpage> {
                     color: Colors.transparent,
                     child: IconButton(
                       splashRadius: 30,
-                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => imageviewer()));},
+                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => imageviewer(url: input['url'])));},
                       icon: Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: Color(maintxt[index % 3]),
