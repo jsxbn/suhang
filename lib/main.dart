@@ -364,7 +364,7 @@ class _RootpageState extends State<Rootpage> {
                     backgroundColor: Colors.transparent,
                     pinned: true,
                     floating: true,
-                    expandedHeight: 80.0,
+                    expandedHeight: 50.0,
                     snap: true,
                     elevation: 0.0,
                     flexibleSpace: FlexibleSpaceBar.createSettings(
@@ -380,7 +380,7 @@ class _RootpageState extends State<Rootpage> {
                           child: FlexibleSpaceBar(
                             titlePadding: EdgeInsets.zero,
                             title: Container(
-                              height: 100,
+                              height: 50,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
