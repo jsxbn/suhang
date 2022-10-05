@@ -85,7 +85,20 @@ class _imageviewerState extends State<imageviewer> {
               );
             } else {
               print(snapshot.data);
-              return Text('False');
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 300,
+                      child: Lottie.asset(
+                          "assets/9354-image-viewer-icon-animation.json",reverse: true,),
+                    ),
+                    Text('해당 수행평가의 이미지가 없습니다.'),
+                    const SizedBox(height: 100,)
+                  ],
+                ),
+              );
             }
           }
           return Center(
@@ -93,29 +106,6 @@ class _imageviewerState extends State<imageviewer> {
           );
         },
       ),
-      // body: ElevatedButton(
-      //     onPressed: () async {
-      //       // await FirebaseStorage.instance.ref().child(url).getDownloadURL().then((exsists) => {if (exsists[0]){}});
-      //       // await FirebaseStorage.instance.ref().child(url).
-      //       // print(url);
-      //       // print(imageurl);
-      //       try {
-      //         final imageurl = await FirebaseStorage.instance.ref().child(url).getDownloadURL();
-      //         print(imageurl);
-      //       }
-      //       catch(error) {
-      //         print('무언가 ㅈ됨');
-      //       }
-      //     },
-      //     child: Text('press this')),
     );
-    // body: Center(
-    //   child: SizedBox(
-    //     width: 200,
-    //     child: Lottie.asset(
-    //       "assets/7728-image-loading-improved.zip",
-    //     ),
-    //   ),
-    // ));
   }
 }

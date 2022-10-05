@@ -78,6 +78,7 @@ flutter:
     - assets/95735-loading-image.zip
     - assets/7728-image-loading-improved.zip
     - assets/9354-image-viewer-icon-animation.json
+    - assets/73061-search-not-found.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

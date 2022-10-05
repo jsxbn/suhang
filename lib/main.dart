@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lottie/lottie.dart';
 import 'package:suhang/imageviewer.dart';
 import 'package:suhang/splashUI.dart';
 import 'package:suhang/su.dart';
@@ -157,7 +158,13 @@ class _RootpageState extends State<Rootpage> {
                     color: Colors.transparent,
                     child: IconButton(
                       splashRadius: 30,
-                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => imageviewer(url: input['url'])));},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    imageviewer(url: input['url'])));
+                      },
                       icon: Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: Color(maintxt[index % 3]),
@@ -319,6 +326,23 @@ class _RootpageState extends State<Rootpage> {
     String nxtDate = DateFormat('yyMMdd').format(nxt);
     formatDate.toString();
     nxtDate.toString();
+
+    Widget checker(List<dynamic> suData) {
+      if (suData.length == 0) {
+        return SizedBox(
+            height: 200,
+            child: Lottie.asset("assets/73061-search-not-found.json"));
+      } else {
+        return ListView.builder(
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: suData.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Item(suData[index], index);
+            });
+      }
+    }
 
     Future<List> _processdata() async {
       suData = await getMarker(formatDate);
@@ -486,8 +510,7 @@ class _RootpageState extends State<Rootpage> {
                                 color: Colors.transparent,
                                 border: Border.all(
                                   width: 1,
-                                  color:
-                                      const Color.fromRGBO(211, 211, 211, 1),
+                                  color: const Color.fromRGBO(211, 211, 211, 1),
                                 ),
                               ),
                               child: Column(
@@ -552,8 +575,7 @@ class _RootpageState extends State<Rootpage> {
                                 //   color: Color.fromRGBO(211, 211, 211, 1),
                                 //   borderRadius: BorderRadius.circular(10),
                                 // ),
-                                defaultColumnWidth:
-                                    const FixedColumnWidth(50),
+                                defaultColumnWidth: const FixedColumnWidth(50),
                                 columnWidths: const {
                                   0: FixedColumnWidth(20),
                                 },
@@ -607,8 +629,8 @@ class _RootpageState extends State<Rootpage> {
                                           child: Text(
                                         '금',
                                         style: TextStyle(
-                                          color: Color.fromRGBO(
-                                              158, 158, 158, 1),
+                                          color:
+                                              Color.fromRGBO(158, 158, 158, 1),
                                           fontSize: 16,
                                         ),
                                       )),
@@ -894,8 +916,7 @@ class _RootpageState extends State<Rootpage> {
                         Column(
                           children: [
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: const [
                                 Text(
                                   '수행평가',
@@ -904,30 +925,10 @@ class _RootpageState extends State<Rootpage> {
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                // IconButton(
-                                //     onPressed: () {
-                                //       Navigator.push(
-                                //         context,
-                                //         MaterialPageRoute(
-                                //             builder: (context) =>
-                                //                 suhang(sh: sh, suData: suData,)),
-                                //       );
-                                //     },
-                                //     icon: const Icon(
-                                //       Icons.arrow_forward_ios_rounded,
-                                //     ),),
                               ],
                             ),
                             const SizedBox(height: 10),
-                            ListView.builder(
-                                padding: EdgeInsets.zero,
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: suData.length,
-                                itemBuilder:
-                                    (BuildContext context, int index) {
-                                  return Item(suData[index], index);
-                                }),
+                            checker(suData),
                           ],
                         ),
                       ],
