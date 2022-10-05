@@ -17,6 +17,10 @@ class imageviewer extends StatefulWidget {
 }
 
 class _imageviewerState extends State<imageviewer> {
+
+  // Future<bool> fileExists(url) async{
+  //   await FirebaseStorage.instance.ref().child(url).getDownloadURL().then((url) => {true}).catchError((){return false;});
+  // }
   @override
   Widget build(BuildContext context) {
     String url = widget.url;
@@ -54,12 +58,39 @@ class _imageviewerState extends State<imageviewer> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: ElevatedButton(
-          onPressed: () async {
-            // final imageurl = await FirebaseStorage.instance.ref().child(url).getDownloadURL();
-            print(url);
-          },
-          child: Text('press this')),
+      body: FutureBuilder(
+        future: FirebaseStorage.instance.ref().child(url).getDownloadURL().then((url) => true).catchError(() => false),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data) {
+              print(snapshot.data);
+              return Text('True');
+            }else {
+              print(snapshot.data);
+              return Text('False');
+            }
+          }
+          return Center(child: Text('error'),);
+        },
+      ),
+      // body: ElevatedButton(
+      //     onPressed: () async {
+      //       // await FirebaseStorage.instance.ref().child(url).getDownloadURL().then((exsists) => {if (exsists[0]){}});
+      //       // await FirebaseStorage.instance.ref().child(url).
+      //       // print(url);
+      //       // print(imageurl);
+      //       try {
+      //         final imageurl = await FirebaseStorage.instance.ref().child(url).getDownloadURL();
+      //         print(imageurl);
+      //       }
+      //       catch(error) {
+      //         print('무언가 ㅈ됨');
+      //       }
+      //     },
+      //     child: Text('press this')),
     );
     // body: Center(
     //   child: SizedBox(
