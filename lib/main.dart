@@ -363,8 +363,9 @@ class _RootpageState extends State<Rootpage> {
                   SliverAppBar(
                     backgroundColor: Colors.transparent,
                     pinned: true,
-                    expandedHeight: 80.0,
                     floating: true,
+                    expandedHeight: 80.0,
+                    snap: true,
                     elevation: 0.0,
                     flexibleSpace: FlexibleSpaceBar.createSettings(
                       currentExtent: currentExtent,
