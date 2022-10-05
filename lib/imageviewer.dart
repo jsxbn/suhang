@@ -17,6 +17,7 @@ class imageviewer extends StatefulWidget {
 }
 
 class _imageviewerState extends State<imageviewer> {
+  late String imageurl;
 
   // Future<bool> fileExists(url) async{
   //   await FirebaseStorage.instance.ref().child(url).getDownloadURL().then((url) => {true}).catchError((){return false;});
@@ -55,25 +56,41 @@ class _imageviewerState extends State<imageviewer> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white.withAlpha(100),
         elevation: 0,
       ),
       body: FutureBuilder(
-        future: FirebaseStorage.instance.ref().child(url).getDownloadURL().then((url) => true).catchError(() => false),
+        future: FirebaseStorage.instance
+            .ref()
+            .child(url)
+            .getDownloadURL()
+            .then((url) {
+          imageurl = url;
+          return true;
+        }).catchError(() {
+          return false;
+        }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(child: Text('로딩중...'));
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data) {
+            if (snapshot.data == true) {
               print(snapshot.data);
-              return Text('True');
-            }else {
+              return PhotoView(
+                backgroundDecoration: BoxDecoration(
+                  color: Colors.white10,
+                ),
+                imageProvider: NetworkImage(imageurl),
+              );
+            } else {
               print(snapshot.data);
               return Text('False');
             }
           }
-          return Center(child: Text('error'),);
+          return Center(
+            child: Text('error'),
+          );
         },
       ),
       // body: ElevatedButton(
