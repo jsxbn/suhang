@@ -55,7 +55,8 @@ class _imageviewerState extends State<imageviewer> {
         elevation: 0,
       ),
       body: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            // final imageurl = await FirebaseStorage.instance.ref().child(url).getDownloadURL();
             print(url);
           },
           child: Text('press this')),

@@ -350,598 +350,597 @@ class _RootpageState extends State<Rootpage> {
     }
 
     return Scaffold(
-      body: SafeArea(
-        child: FutureBuilder(
-          future: _processdata(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const splashui();
-            }
-            if (snapshot.hasData) {
-              return Scaffold(
-                body: CustomScrollView(slivers: [
-                  SliverAppBar(
-                    backgroundColor: Colors.transparent,
-                    pinned: true,
-                    floating: true,
-                    expandedHeight: 50.0,
-                    snap: true,
-                    elevation: 0.0,
-                    flexibleSpace: FlexibleSpaceBar.createSettings(
-                      currentExtent: currentExtent,
-                      minExtent: 0,
-                      maxExtent: maxExtent,
-                      child: ClipRect(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(
-                            sigmaX: 10,
-                            sigmaY: 10,
-                          ),
-                          child: FlexibleSpaceBar(
-                            titlePadding: EdgeInsets.zero,
-                            title: Container(
-                              height: 50,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(width: 20),
-                                      Text(
-                                        '_leeban',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 28,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+      body: FutureBuilder(
+        future: _processdata(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const splashui();
+          }
+          if (snapshot.hasData) {
+            return Scaffold(
+              body: CustomScrollView(slivers: [
+                SliverAppBar(
+                  backgroundColor: Colors.transparent,
+                  pinned: true,
+                  floating: true,
+                  expandedHeight: 50.0,
+                  snap: true,
+                  elevation: 0.0,
+                  flexibleSpace: FlexibleSpaceBar.createSettings(
+                    currentExtent: currentExtent,
+                    minExtent: 0,
+                    maxExtent: maxExtent,
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 10,
+                          sigmaY: 10,
                         ),
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(25),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     const Text(
-                          //       '안녕하세요',
-                          //       style: TextStyle(
-                          //         color: Color.fromARGB(255, 54, 54, 109),
-                          //         fontSize: 28,
-                          //         fontWeight: FontWeight.w900,
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       padding: const EdgeInsets.all(10),
-                          //       decoration: BoxDecoration(
-                          //         borderRadius: BorderRadius.circular(15),
-                          //         color: const Color.fromRGBO(250, 250, 250, 1),
-                          //         border: Border.all(
-                          //             width: 1,
-                          //             color:
-                          //                 const Color.fromRGBO(211, 211, 211, 1)),
-                          //       ),
-                          //       // child: Column(
-                          //       //   children: [
-                          //       //     Text(hrs),
-                          //       //     const Text('날씨 맑음 25C'),
-                          //       //   ],
-                          //       // ),
-                          //     ),
-                          //   ],
-                          // ),
-                          // const SizedBox(
-                          //   height: 30,
-                          // ),
-                          // Row(
-                          //   children: const [
-                          //     Text(
-                          //       '다가오는 수행평가',
-                          //       style: TextStyle(
-                          //         fontSize: 20,
-                          //         fontWeight: FontWeight.w700,
-                          //       ),
-                          //     ),
-                          //     SizedBox(),
-                          //   ],
-                          // ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    '행신중 2-2',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  Text(
-                                    '안녕하세요',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(15),
-                                width: 140,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.transparent,
-                                  border: Border.all(
-                                    width: 1,
-                                    color:
-                                        const Color.fromRGBO(211, 211, 211, 1),
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '다가오는 수행평가',
-                                    ),
-                                    Text(
-                                      (() {
-                                        if (suData.length > 1) {
-                                          return "${suData[0]['name']},${suData[1]['name']}";
-                                        } else if (suData.length > 0) {
-                                          return suData[0]['name'];
-                                        } else {
-                                          return "없음";
-                                        }
-                                      })(),
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          Row(
-                            children: const [
-                              Text(
-                                '시간표',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              SizedBox(),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.transparent,
-                              border: Border.all(
-                                width: 1,
-                                color: const Color.fromRGBO(211, 211, 211, 1),
-                              ),
-                            ),
+                        child: FlexibleSpaceBar(
+                          titlePadding: EdgeInsets.zero,
+                          title: Container(
+                            height: 50,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Table(
-                                  // border: TableBorder.all(
-                                  //   color: Color.fromRGBO(211, 211, 211, 1),
-                                  //   borderRadius: BorderRadius.circular(10),
-                                  // ),
-                                  defaultColumnWidth:
-                                      const FixedColumnWidth(50),
-                                  columnWidths: const {
-                                    0: FixedColumnWidth(20),
-                                  },
-                                  defaultVerticalAlignment:
-                                      TableCellVerticalAlignment.middle,
-                                  children: const [
-                                    TableRow(
-                                      children: [
-                                        Center(),
-                                        Center(
-                                          child: Text(
-                                            '월',
-                                            style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  158, 158, 158, 1),
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            '화',
-                                            style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  158, 158, 158, 1),
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            '수',
-                                            style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  158, 158, 158, 1),
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            '목',
-                                            style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  158, 158, 158, 1),
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                        Center(
-                                            child: Text(
-                                          '금',
-                                          style: TextStyle(
-                                            color: Color.fromRGBO(
-                                                158, 158, 158, 1),
-                                            fontSize: 16,
-                                          ),
-                                        )),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Column(
-                                      children: [
-                                        SizedBox(
-                                          width: defwid,
-                                          height: defhet,
-                                          child: const Center(
-                                            child: Text(
-                                              '1',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    158, 158, 158, 1),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: defwid,
-                                          height: defhet,
-                                          child: const Center(
-                                            child: Text(
-                                              '2',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    158, 158, 158, 1),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: defwid,
-                                          height: defhet,
-                                          child: const Center(
-                                            child: Text(
-                                              '3',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    158, 158, 158, 1),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: defwid,
-                                          height: defhet,
-                                          child: const Center(
-                                            child: Text(
-                                              '4',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    158, 158, 158, 1),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: defwid,
-                                          height: defhet,
-                                          child: const Center(
-                                            child: Text(
-                                              '5',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    158, 158, 158, 1),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: defwid,
-                                          height: defhet,
-                                          child: const Center(
-                                            child: Text(
-                                              '6',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    158, 158, 158, 1),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: defwid,
-                                          height: defhet,
-                                          child: const Center(
-                                            child: Text(
-                                              '7',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    158, 158, 158, 1),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Table(
-                                      border: TableBorder.all(
-                                        color: const Color.fromRGBO(
-                                            211, 211, 211, 1),
+                                    SizedBox(width: 20),
+                                    Text(
+                                      '_leeban',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 28,
+                                        color: Colors.black,
                                       ),
-                                      defaultColumnWidth:
-                                          const FixedColumnWidth(50),
-                                      defaultVerticalAlignment:
-                                          TableCellVerticalAlignment.middle,
-                                      children: [
-                                        TableRow(
-                                          children: [
-                                            Center(
-                                              child: Text(p1?[0] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p1?[1] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p1?[2] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p1?[3] ?? '몰?루'),
-                                            ),
-                                            SizedBox(
-                                                height: tbhet,
-                                                child: Center(
-                                                    child:
-                                                        Text(p1?[4] ?? '몰?루'))),
-                                          ],
-                                        ),
-                                        TableRow(
-                                          children: [
-                                            Center(
-                                              child: Text(p2?[0] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p2?[1] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p2?[2] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p2?[3] ?? '몰?루'),
-                                            ),
-                                            SizedBox(
-                                                height: tbhet,
-                                                child: Center(
-                                                    child:
-                                                        Text(p2?[4] ?? '몰?루'))),
-                                          ],
-                                        ),
-                                        TableRow(
-                                          children: [
-                                            Center(
-                                              child: Text(p3?[0] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p3?[1] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p3?[2] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p3?[3] ?? '몰?루'),
-                                            ),
-                                            SizedBox(
-                                                height: tbhet,
-                                                child: Center(
-                                                    child:
-                                                        Text(p3?[4] ?? '몰?루'))),
-                                          ],
-                                        ),
-                                        TableRow(
-                                          children: [
-                                            Center(
-                                              child: Text(p4?[0] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p4?[1] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p4?[2] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p4?[3] ?? '몰?루'),
-                                            ),
-                                            SizedBox(
-                                                height: tbhet,
-                                                child: Center(
-                                                    child:
-                                                        Text(p4?[4] ?? '몰?루'))),
-                                          ],
-                                        ),
-                                        TableRow(
-                                          children: [
-                                            Center(
-                                              child: Text(p5?[0] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p5?[1] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p5?[2] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p5?[3] ?? '몰?루'),
-                                            ),
-                                            SizedBox(
-                                                height: tbhet,
-                                                child: Center(
-                                                    child:
-                                                        Text(p5?[4] ?? '몰?루'))),
-                                          ],
-                                        ),
-                                        TableRow(
-                                          children: [
-                                            Center(
-                                              child: Text(p6?[0] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p6?[1] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p6?[2] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p6?[3] ?? '몰?루'),
-                                            ),
-                                            SizedBox(
-                                                height: tbhet,
-                                                child: Center(
-                                                    child:
-                                                        Text(p6?[4] ?? '몰?루'))),
-                                          ],
-                                        ),
-                                        TableRow(
-                                          children: [
-                                            Center(
-                                              child: Text(p7?[0] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p7?[1] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p7?[2] ?? '몰?루'),
-                                            ),
-                                            Center(
-                                              child: Text(p7?[3] ?? '몰?루'),
-                                            ),
-                                            SizedBox(
-                                                height: tbhet,
-                                                child: Center(
-                                                    child:
-                                                        Text(p7?[4] ?? '몰?루'))),
-                                          ],
-                                        ),
-                                      ],
                                     ),
                                   ],
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(25),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     const Text(
+                        //       '안녕하세요',
+                        //       style: TextStyle(
+                        //         color: Color.fromARGB(255, 54, 54, 109),
+                        //         fontSize: 28,
+                        //         fontWeight: FontWeight.w900,
+                        //       ),
+                        //     ),
+                        //     Container(
+                        //       padding: const EdgeInsets.all(10),
+                        //       decoration: BoxDecoration(
+                        //         borderRadius: BorderRadius.circular(15),
+                        //         color: const Color.fromRGBO(250, 250, 250, 1),
+                        //         border: Border.all(
+                        //             width: 1,
+                        //             color:
+                        //                 const Color.fromRGBO(211, 211, 211, 1)),
+                        //       ),
+                        //       // child: Column(
+                        //       //   children: [
+                        //       //     Text(hrs),
+                        //       //     const Text('날씨 맑음 25C'),
+                        //       //   ],
+                        //       // ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // const SizedBox(
+                        //   height: 30,
+                        // ),
+                        // Row(
+                        //   children: const [
+                        //     Text(
+                        //       '다가오는 수행평가',
+                        //       style: TextStyle(
+                        //         fontSize: 20,
+                        //         fontWeight: FontWeight.w700,
+                        //       ),
+                        //     ),
+                        //     SizedBox(),
+                        //   ],
+                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text(
+                                  '행신중 2-2',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Text(
+                                  '안녕하세요',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(15),
+                              width: 140,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.transparent,
+                                border: Border.all(
+                                  width: 1,
+                                  color:
+                                      const Color.fromRGBO(211, 211, 211, 1),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                                   Text(
-                                    '수행평가',
+                                    '다가오는 수행평가',
+                                  ),
+                                  Text(
+                                    (() {
+                                      if (suData.length > 1) {
+                                        return "${suData[0]['name']},${suData[1]['name']}";
+                                      } else if (suData.length > 0) {
+                                        return suData[0]['name'];
+                                      } else {
+                                        return "없음";
+                                      }
+                                    })(),
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                  // IconButton(
-                                  //     onPressed: () {
-                                  //       Navigator.push(
-                                  //         context,
-                                  //         MaterialPageRoute(
-                                  //             builder: (context) =>
-                                  //                 suhang(sh: sh, suData: suData,)),
-                                  //       );
-                                  //     },
-                                  //     icon: const Icon(
-                                  //       Icons.arrow_forward_ios_rounded,
-                                  //     ),),
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: suData.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Item(suData[index], index);
-                                  }),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 15),
+                        Row(
+                          children: const [
+                            Text(
+                              '시간표',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(),
+                          ],
+                        ),
+                        const SizedBox(height: 15),
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.transparent,
+                            border: Border.all(
+                              width: 1,
+                              color: const Color.fromRGBO(211, 211, 211, 1),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Table(
+                                // border: TableBorder.all(
+                                //   color: Color.fromRGBO(211, 211, 211, 1),
+                                //   borderRadius: BorderRadius.circular(10),
+                                // ),
+                                defaultColumnWidth:
+                                    const FixedColumnWidth(50),
+                                columnWidths: const {
+                                  0: FixedColumnWidth(20),
+                                },
+                                defaultVerticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                children: const [
+                                  TableRow(
+                                    children: [
+                                      Center(),
+                                      Center(
+                                        child: Text(
+                                          '월',
+                                          style: TextStyle(
+                                            color: Color.fromRGBO(
+                                                158, 158, 158, 1),
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          '화',
+                                          style: TextStyle(
+                                            color: Color.fromRGBO(
+                                                158, 158, 158, 1),
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          '수',
+                                          style: TextStyle(
+                                            color: Color.fromRGBO(
+                                                158, 158, 158, 1),
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          '목',
+                                          style: TextStyle(
+                                            color: Color.fromRGBO(
+                                                158, 158, 158, 1),
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                          child: Text(
+                                        '금',
+                                        style: TextStyle(
+                                          color: Color.fromRGBO(
+                                              158, 158, 158, 1),
+                                          fontSize: 16,
+                                        ),
+                                      )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        width: defwid,
+                                        height: defhet,
+                                        child: const Center(
+                                          child: Text(
+                                            '1',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  158, 158, 158, 1),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: defwid,
+                                        height: defhet,
+                                        child: const Center(
+                                          child: Text(
+                                            '2',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  158, 158, 158, 1),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: defwid,
+                                        height: defhet,
+                                        child: const Center(
+                                          child: Text(
+                                            '3',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  158, 158, 158, 1),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: defwid,
+                                        height: defhet,
+                                        child: const Center(
+                                          child: Text(
+                                            '4',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  158, 158, 158, 1),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: defwid,
+                                        height: defhet,
+                                        child: const Center(
+                                          child: Text(
+                                            '5',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  158, 158, 158, 1),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: defwid,
+                                        height: defhet,
+                                        child: const Center(
+                                          child: Text(
+                                            '6',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  158, 158, 158, 1),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: defwid,
+                                        height: defhet,
+                                        child: const Center(
+                                          child: Text(
+                                            '7',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  158, 158, 158, 1),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Table(
+                                    border: TableBorder.all(
+                                      color: const Color.fromRGBO(
+                                          211, 211, 211, 1),
+                                    ),
+                                    defaultColumnWidth:
+                                        const FixedColumnWidth(50),
+                                    defaultVerticalAlignment:
+                                        TableCellVerticalAlignment.middle,
+                                    children: [
+                                      TableRow(
+                                        children: [
+                                          Center(
+                                            child: Text(p1?[0] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p1?[1] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p1?[2] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p1?[3] ?? '몰?루'),
+                                          ),
+                                          SizedBox(
+                                              height: tbhet,
+                                              child: Center(
+                                                  child:
+                                                      Text(p1?[4] ?? '몰?루'))),
+                                        ],
+                                      ),
+                                      TableRow(
+                                        children: [
+                                          Center(
+                                            child: Text(p2?[0] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p2?[1] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p2?[2] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p2?[3] ?? '몰?루'),
+                                          ),
+                                          SizedBox(
+                                              height: tbhet,
+                                              child: Center(
+                                                  child:
+                                                      Text(p2?[4] ?? '몰?루'))),
+                                        ],
+                                      ),
+                                      TableRow(
+                                        children: [
+                                          Center(
+                                            child: Text(p3?[0] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p3?[1] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p3?[2] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p3?[3] ?? '몰?루'),
+                                          ),
+                                          SizedBox(
+                                              height: tbhet,
+                                              child: Center(
+                                                  child:
+                                                      Text(p3?[4] ?? '몰?루'))),
+                                        ],
+                                      ),
+                                      TableRow(
+                                        children: [
+                                          Center(
+                                            child: Text(p4?[0] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p4?[1] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p4?[2] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p4?[3] ?? '몰?루'),
+                                          ),
+                                          SizedBox(
+                                              height: tbhet,
+                                              child: Center(
+                                                  child:
+                                                      Text(p4?[4] ?? '몰?루'))),
+                                        ],
+                                      ),
+                                      TableRow(
+                                        children: [
+                                          Center(
+                                            child: Text(p5?[0] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p5?[1] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p5?[2] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p5?[3] ?? '몰?루'),
+                                          ),
+                                          SizedBox(
+                                              height: tbhet,
+                                              child: Center(
+                                                  child:
+                                                      Text(p5?[4] ?? '몰?루'))),
+                                        ],
+                                      ),
+                                      TableRow(
+                                        children: [
+                                          Center(
+                                            child: Text(p6?[0] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p6?[1] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p6?[2] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p6?[3] ?? '몰?루'),
+                                          ),
+                                          SizedBox(
+                                              height: tbhet,
+                                              child: Center(
+                                                  child:
+                                                      Text(p6?[4] ?? '몰?루'))),
+                                        ],
+                                      ),
+                                      TableRow(
+                                        children: [
+                                          Center(
+                                            child: Text(p7?[0] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p7?[1] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p7?[2] ?? '몰?루'),
+                                          ),
+                                          Center(
+                                            child: Text(p7?[3] ?? '몰?루'),
+                                          ),
+                                          SizedBox(
+                                              height: tbhet,
+                                              child: Center(
+                                                  child:
+                                                      Text(p7?[4] ?? '몰?루'))),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: const [
+                                Text(
+                                  '수행평가',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                // IconButton(
+                                //     onPressed: () {
+                                //       Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //             builder: (context) =>
+                                //                 suhang(sh: sh, suData: suData,)),
+                                //       );
+                                //     },
+                                //     icon: const Icon(
+                                //       Icons.arrow_forward_ios_rounded,
+                                //     ),),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            ListView.builder(
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: suData.length,
+                                itemBuilder:
+                                    (BuildContext context, int index) {
+                                  return Item(suData[index], index);
+                                }),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ]),
-              );
-            } else if (snapshot.hasError) {
-              return const Text('에러 발생. 에러코드: wowddongo');
-            }
-            return const Text('에러 발생. 에러코드:ssibal');
-          },
-        ),
+                ),
+              ]),
+            );
+          } else if (snapshot.hasError) {
+            return const Text('에러 발생. 에러코드: wowddongo');
+          }
+          return const Text('에러 발생. 에러코드:ssibal');
+        },
       ),
     );
   }
