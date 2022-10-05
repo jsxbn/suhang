@@ -76,15 +76,19 @@ class _imageviewerState extends State<imageviewer> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == true) {
-              print(snapshot.data);
               return PhotoView(
                 backgroundDecoration: BoxDecoration(
                   color: Colors.white10,
                 ),
                 imageProvider: NetworkImage(imageurl),
+                loadingBuilder: (context, event) {
+                  if (event != null) {
+                    return Center(child: Lottie.asset("assets/91792-uploading-image.json"),);
+                  }
+                  return const Text('');
+                },
               );
             } else {
-              print(snapshot.data);
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

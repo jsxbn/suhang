@@ -75,10 +75,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/95735-loading-image.zip
-    - assets/7728-image-loading-improved.zip
     - assets/9354-image-viewer-icon-animation.json
     - assets/73061-search-not-found.json
+    - assets/91792-uploading-image.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:
