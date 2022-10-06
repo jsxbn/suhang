@@ -289,7 +289,12 @@ class _RootpageState extends State<Rootpage> {
     Map<String, dynamic> hmmtestgod = listed[0] as Map<String, dynamic>;
     while (hmmtestgod['rldate'] < int.parse(formatDate)) {
       listed.removeAt(0);
-      hmmtestgod = listed[0] as Map<String, dynamic>;
+      try {
+        hmmtestgod = listed[0] as Map<String, dynamic>;
+      } on Error {
+        listed = ['nodata'];
+        break;
+      }
     }
     return listed;
   }
@@ -328,19 +333,34 @@ class _RootpageState extends State<Rootpage> {
     nxtDate.toString();
 
     Widget checker(List<dynamic> suData) {
-      if (suData.length == 0) {
-        return SizedBox(
-            height: 200,
-            child: Lottie.asset("assets/73061-search-not-found.json"));
+      if (suData[0] != 'nodata') {
+        if (suData.isEmpty) {
+          return Expanded(
+            child: SizedBox(
+                height: 200,
+                child: Lottie.asset("assets/73061-search-not-found.json")),
+          );
+        } else {
+          return ListView.builder(
+              padding: EdgeInsets.zero,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: suData.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Item(suData[index], index);
+              });
+        }
       } else {
-        return ListView.builder(
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: suData.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Item(suData[index], index);
-            });
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 200,
+              child: Lottie.asset('assets/73061-search-not-found.json')
+            ),
+            const Text('수행평가 일정 없음'),
+          ],
+        );
       }
     }
 
@@ -523,7 +543,8 @@ class _RootpageState extends State<Rootpage> {
                                     (() {
                                       if (suData.length > 1) {
                                         return "${suData[0]['name']},${suData[1]['name']}";
-                                      } else if (suData.length > 0) {
+                                      } else if (suData.length > 0 &&
+                                          suData[0] != 'nodata') {
                                         return suData[0]['name'];
                                       } else {
                                         return "없음";
