@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lottie/lottie.dart';
 import 'package:suhang/imageviewer.dart';
 import 'package:suhang/splashUI.dart';
-import 'package:suhang/su.dart';
 import 'firebase_options.dart';
 import 'package:intl/intl.dart';
 
