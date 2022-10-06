@@ -44,7 +44,7 @@ class _imageviewerState extends State<imageviewer> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: Colors.black87,
           ),
@@ -72,12 +72,12 @@ class _imageviewerState extends State<imageviewer> {
         }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: Text('로딩중...'));
+            return const Center(child: Text('로딩중...'));
           }
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == true) {
               return PhotoView(
-                backgroundDecoration: BoxDecoration(
+                backgroundDecoration: const BoxDecoration(
                   color: Colors.white10,
                 ),
                 imageProvider: NetworkImage(imageurl),
@@ -98,14 +98,14 @@ class _imageviewerState extends State<imageviewer> {
                       child: Lottie.asset(
                           "assets/9354-image-viewer-icon-animation.json",reverse: true,),
                     ),
-                    Text('해당 수행평가의 이미지가 없습니다.'),
+                    const Text('해당 수행평가의 이미지가 없습니다.'),
                     const SizedBox(height: 100,)
                   ],
                 ),
               );
             }
           }
-          return Center(
+          return const Center(
             child: Text('error'),
           );
         },

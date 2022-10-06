@@ -74,17 +74,17 @@ class _RootpageState extends State<Rootpage> {
     List<int> lftclr = [0xff65E0AC, 0xff65A5E0, 0xffFD9800];
     List<int> maintxt = [0xff015C36, 0xff092862, 0xffE06E04];
     return Container(
-      margin: EdgeInsets.only(top: 8, bottom: 8),
-      padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.only(top: 8, bottom: 8),
+      padding: const EdgeInsets.all(10),
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          stops: [0.02, 0.02],
+          stops: const [0.02, 0.02],
           colors: [Color(lftclr[index % 3]), Color(colorlist[index % 3])],
         ),
         // color: Color(colorlist[index % 4]),
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
+        boxShadow: const [
           // BoxShadow(
           //   color: Color(colorlist[index % 3]).withOpacity(0.5),
           //   spreadRadius: 5,
@@ -111,7 +111,7 @@ class _RootpageState extends State<Rootpage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 2,
                     ),
                     Text(
@@ -130,7 +130,7 @@ class _RootpageState extends State<Rootpage> {
                           color: Color(maintxt[index % 3]),
                           size: 18,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 3,
                         ),
                         Text(
@@ -230,7 +230,7 @@ class _RootpageState extends State<Rootpage> {
         const SizedBox(height: 8),
       ];
     } else {
-      return [Text('아직 수행평가 일정이 없습니다.')];
+      return [const Text('아직 수행평가 일정이 없습니다.')];
     }
   }
 
@@ -427,7 +427,7 @@ class _RootpageState extends State<Rootpage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Row(
-                                  children: [
+                                  children: const [
                                     SizedBox(width: 20),
                                     Text(
                                       '_leeban',
@@ -535,7 +535,7 @@ class _RootpageState extends State<Rootpage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     '다가오는 수행평가',
                                   ),
                                   Text(
@@ -549,7 +549,7 @@ class _RootpageState extends State<Rootpage> {
                                         return "없음";
                                       }
                                     })(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w700,
                                     ),

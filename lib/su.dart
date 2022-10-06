@@ -43,10 +43,10 @@ class _suhangState extends State<suhang> {
           },
         );
       } else {
-        return Center(child: Text('수행평가 일정이 없습니다.'));
+        return const Center(child: Text('수행평가 일정이 없습니다.'));
       }
     }
-    return Center(child: Text('에러 발생. 에러코드: jeonsoobin'));
+    return const Center(child: Text('에러 발생. 에러코드: jeonsoobin'));
   }
 
   Widget Item(dynamic input, int index) {
@@ -55,8 +55,8 @@ class _suhangState extends State<suhang> {
     List<int> lftclr = [0xff65E0AC, 0xff65A5E0, 0xffFD9800];
     List<int> maintxt = [0xff015C36, 0xff092862, 0xffE06E04];
     return Container(
-      margin: EdgeInsets.only(top: 8, bottom: 8, left: 25, right: 25),
-      padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.only(top: 8, bottom: 8, left: 25, right: 25),
+      padding: const EdgeInsets.all(10),
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -92,7 +92,7 @@ class _suhangState extends State<suhang> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 2,
                     ),
                     Text(
@@ -111,7 +111,7 @@ class _suhangState extends State<suhang> {
                           color: Color(maintxt[index % 3]),
                           size: 18,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 3,
                         ),
                         Text(
@@ -178,12 +178,12 @@ class _suhangState extends State<suhang> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: Colors.black87,
           ),
         ),
-        title: Text('수행평가 일정',
+        title: const Text('수행평가 일정',
             style: TextStyle(
               color: Colors.black87,
               fontWeight: FontWeight.w700,
@@ -220,8 +220,8 @@ class _ItemsState extends State<Items> {
     List<int> lftclr = [0xff65E0AC, 0xff65A5E0, 0xffFD9800];
     List<int> maintxt = [0xff015C36, 0xff092862, 0xffE06E04];
     return Container(
-      margin: EdgeInsets.only(top: 8, bottom: 8, left: 25, right: 25),
-      padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.only(top: 8, bottom: 8, left: 25, right: 25),
+      padding: const EdgeInsets.all(10),
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -257,7 +257,7 @@ class _ItemsState extends State<Items> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 2,
                     ),
                     Text(
@@ -276,7 +276,7 @@ class _ItemsState extends State<Items> {
                           color: Color(maintxt[index % 3]),
                           size: 18,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 3,
                         ),
                         Text(
