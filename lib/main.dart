@@ -355,9 +355,8 @@ class _RootpageState extends State<Rootpage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              height: 200,
-              child: Lottie.asset('assets/73061-search-not-found.json')
-            ),
+                height: 200,
+                child: Lottie.asset('assets/73061-search-not-found.json')),
             const Text('수행평가 일정 없음'),
           ],
         );
@@ -767,164 +766,158 @@ class _RootpageState extends State<Rootpage> {
                                       ),
                                     ],
                                   ),
-                                  Table(
-                                    border: TableBorder.all(
-                                      color: const Color.fromRGBO(
-                                          211, 211, 211, 1),
+                                  SizedBox(
+                                    width: 250,
+                                    child: ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: 7,
+                                      itemBuilder: (context, clindex) {
+                                        return SizedBox(
+                                          height: 50,
+                                          child: ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemCount: 5,
+                                            itemBuilder: (context, index) {
+                                              int a = clindex + 1;
+                                              List? p = sg?['${a.toString()}교시']
+                                                  .toString()
+                                                  .split(',');
+                                              if (index == 4 && clindex != 6) {
+                                                return Container(
+                                                  width: 50,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    border: Border(
+                                                      top: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                      left: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                      right: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child:
+                                                        Text(p?[index] ?? ""),
+                                                  ),
+                                                );
+                                              }
+                                              if (clindex == 6 && index != 4) {
+                                                return Container(
+                                                  width: 50,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    border: Border(
+                                                      top: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                      left: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                      bottom: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child:
+                                                        Text(p?[index] ?? ""),
+                                                  ),
+                                                );
+                                              }
+                                              if (index == 4 && clindex == 6) {
+                                                return Container(
+                                                  width: 50,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    border: Border(
+                                                      top: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                      left: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                      right: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                      bottom: BorderSide(
+                                                        width: 1,
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            211, 211, 211, 1),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child:
+                                                        Text(p?[index] ?? ""),
+                                                  ),
+                                                );
+                                              }
+                                              return Container(
+                                                width: 50,
+                                                decoration: const BoxDecoration(
+                                                  border: Border(
+                                                    top: BorderSide(
+                                                      width: 1,
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              211, 211, 211, 1),
+                                                    ),
+                                                    left: BorderSide(
+                                                      width: 1,
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              211, 211, 211, 1),
+                                                    ),
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: Text(p?[index] ?? ""),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
                                     ),
-                                    defaultColumnWidth:
-                                        const FixedColumnWidth(50),
-                                    defaultVerticalAlignment:
-                                        TableCellVerticalAlignment.middle,
-                                    children: [
-                                      TableRow(
-                                        children: [
-                                          Center(
-                                            child: Text(p1?[0] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p1?[1] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p1?[2] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p1?[3] ?? '몰?루'),
-                                          ),
-                                          SizedBox(
-                                              height: tbhet,
-                                              child: Center(
-                                                  child:
-                                                      Text(p1?[4] ?? '몰?루'))),
-                                        ],
-                                      ),
-                                      TableRow(
-                                        children: [
-                                          Center(
-                                            child: Text(p2?[0] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p2?[1] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p2?[2] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p2?[3] ?? '몰?루'),
-                                          ),
-                                          SizedBox(
-                                              height: tbhet,
-                                              child: Center(
-                                                  child:
-                                                      Text(p2?[4] ?? '몰?루'))),
-                                        ],
-                                      ),
-                                      TableRow(
-                                        children: [
-                                          Center(
-                                            child: Text(p3?[0] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p3?[1] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p3?[2] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p3?[3] ?? '몰?루'),
-                                          ),
-                                          SizedBox(
-                                              height: tbhet,
-                                              child: Center(
-                                                  child:
-                                                      Text(p3?[4] ?? '몰?루'))),
-                                        ],
-                                      ),
-                                      TableRow(
-                                        children: [
-                                          Center(
-                                            child: Text(p4?[0] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p4?[1] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p4?[2] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p4?[3] ?? '몰?루'),
-                                          ),
-                                          SizedBox(
-                                              height: tbhet,
-                                              child: Center(
-                                                  child:
-                                                      Text(p4?[4] ?? '몰?루'))),
-                                        ],
-                                      ),
-                                      TableRow(
-                                        children: [
-                                          Center(
-                                            child: Text(p5?[0] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p5?[1] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p5?[2] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p5?[3] ?? '몰?루'),
-                                          ),
-                                          SizedBox(
-                                              height: tbhet,
-                                              child: Center(
-                                                  child:
-                                                      Text(p5?[4] ?? '몰?루'))),
-                                        ],
-                                      ),
-                                      TableRow(
-                                        children: [
-                                          Center(
-                                            child: Text(p6?[0] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p6?[1] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p6?[2] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p6?[3] ?? '몰?루'),
-                                          ),
-                                          SizedBox(
-                                              height: tbhet,
-                                              child: Center(
-                                                  child:
-                                                      Text(p6?[4] ?? '몰?루'))),
-                                        ],
-                                      ),
-                                      TableRow(
-                                        children: [
-                                          Center(
-                                            child: Text(p7?[0] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p7?[1] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p7?[2] ?? '몰?루'),
-                                          ),
-                                          Center(
-                                            child: Text(p7?[3] ?? '몰?루'),
-                                          ),
-                                          SizedBox(
-                                              height: tbhet,
-                                              child: Center(
-                                                  child:
-                                                      Text(p7?[4] ?? '몰?루'))),
-                                        ],
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),
