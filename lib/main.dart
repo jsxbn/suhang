@@ -522,7 +522,7 @@ class _RootpageState extends State<Rootpage> {
                             ),
                             Container(
                               padding: const EdgeInsets.all(15),
-                              width: 140,
+                              width: 145,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.transparent,
