@@ -520,40 +520,41 @@ class _RootpageState extends State<Rootpage> {
                                 ),
                               ],
                             ),
-                            Container(
-                              padding: const EdgeInsets.all(15),
-                              width: 145,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.transparent,
-                                border: Border.all(
-                                  width: 1,
-                                  color: const Color.fromRGBO(211, 211, 211, 1),
+                            Flexible(
+                              child: Container(
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.transparent,
+                                  border: Border.all(
+                                    width: 1,
+                                    color: const Color.fromRGBO(211, 211, 211, 1),
+                                  ),
                                 ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    '다가오는 수행평가',
-                                  ),
-                                  Text(
-                                    (() {
-                                      if (suData.length > 1) {
-                                        return "${suData[0]['name']},${suData[1]['name']}";
-                                      } else if (suData.length > 0 &&
-                                          suData[0] != 'nodata') {
-                                        return suData[0]['name'];
-                                      } else {
-                                        return "없음";
-                                      }
-                                    })(),
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '다가오는 수행평가',
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      (() {
+                                        if (suData.length > 1) {
+                                          return "${suData[0]['name']},${suData[1]['name']}";
+                                        } else if (suData.length > 0 &&
+                                            suData[0] != 'nodata') {
+                                          return suData[0]['name'];
+                                        } else {
+                                          return "없음";
+                                        }
+                                      })(),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
