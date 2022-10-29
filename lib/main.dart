@@ -8,12 +8,15 @@ import 'package:suhang/imageviewer.dart';
 import 'package:suhang/splashUI.dart';
 import 'firebase_options.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
 
@@ -45,6 +48,8 @@ class Rootpage extends StatefulWidget {
 
 class _RootpageState extends State<Rootpage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FlutterLocalNotificationsPlugin? fltNotification;
 
   Map<String, dynamic>? sh = {}; //수행평가 db
   Map<String, dynamic>? sg = {}; //시간표 db
@@ -177,60 +182,6 @@ class _RootpageState extends State<Rootpage> {
         ),
       ),
     );
-  }
-
-  List<Widget> preview(List hey) {
-    if (hey.length > 0) {
-      return [
-        const SizedBox(height: 8),
-        Text(
-          (() {
-            if (hey.length > 0) {
-              return hey[0]['name'];
-            } else {
-              return '';
-            }
-          })(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const Divider(),
-        Text(
-          (() {
-            if (hey.length > 1) {
-              return hey[1]['name'];
-            } else {
-              return '';
-            }
-          })(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const Divider(),
-        Text(
-          (() {
-            if (hey.length > 2) {
-              return hey[2]['name'];
-            } else {
-              return '';
-            }
-          })(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const Divider(),
-        Text(
-          (() {
-            if (hey.length > 3) {
-              return hey[3]['name'];
-            } else {
-              return '';
-            }
-          })(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 8),
-      ];
-    } else {
-      return [const Text('아직 수행평가 일정이 없습니다.')];
-    }
   }
 
   List dolist(Map<String, dynamic>? raw, DateTime now) {
