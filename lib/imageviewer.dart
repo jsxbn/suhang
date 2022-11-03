@@ -83,7 +83,7 @@ class _imageviewerState extends State<imageviewer> {
                 imageProvider: NetworkImage(imageurl),
                 loadingBuilder: (context, event) {
                   if (event != null) {
-                    return Center(child: Lottie.asset("assets/91792-uploading-image.json"),);
+                    return Center(child: Lottie.asset("assets/9354-image-viewer-icon-animation.json"),);
                   }
                   return const Text('');
                 },
@@ -96,7 +96,7 @@ class _imageviewerState extends State<imageviewer> {
                     SizedBox(
                       height: 300,
                       child: Lottie.asset(
-                          "assets/9354-image-viewer-icon-animation.json",reverse: true,),
+                          "assets/73061-search-not-found.json",reverse: true,),
                     ),
                     const Text('해당 수행평가의 이미지가 없습니다.'),
                     const SizedBox(height: 100,)

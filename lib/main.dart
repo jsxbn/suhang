@@ -6,14 +6,49 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lottie/lottie.dart';
 import 'package:suhang/imageviewer.dart';
 import 'package:suhang/splashUI.dart';
+import 'package:suhang/webgimal.dart';
 import 'firebase_options.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  print("Handling a background message: ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+  });
+
+  print('User granted permission: ${settings.authorizationStatus}');
+
   runApp(const MyApp());
 }
 
@@ -45,16 +80,11 @@ class Rootpage extends StatefulWidget {
 
 class _RootpageState extends State<Rootpage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FlutterLocalNotificationsPlugin? fltNotification;
 
   Map<String, dynamic>? sh = {}; //수행평가 db
   Map<String, dynamic>? sg = {}; //시간표 db
-  List? p1;
-  List? p2;
-  List? p3;
-  List? p4;
-  List? p5;
-  List? p6;
-  List? p7;
   double? defwid;
   double? defhet;
   double? tbhet;
@@ -177,60 +207,6 @@ class _RootpageState extends State<Rootpage> {
         ),
       ),
     );
-  }
-
-  List<Widget> preview(List hey) {
-    if (hey.length > 0) {
-      return [
-        const SizedBox(height: 8),
-        Text(
-          (() {
-            if (hey.length > 0) {
-              return hey[0]['name'];
-            } else {
-              return '';
-            }
-          })(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const Divider(),
-        Text(
-          (() {
-            if (hey.length > 1) {
-              return hey[1]['name'];
-            } else {
-              return '';
-            }
-          })(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const Divider(),
-        Text(
-          (() {
-            if (hey.length > 2) {
-              return hey[2]['name'];
-            } else {
-              return '';
-            }
-          })(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const Divider(),
-        Text(
-          (() {
-            if (hey.length > 3) {
-              return hey[3]['name'];
-            } else {
-              return '';
-            }
-          })(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 8),
-      ];
-    } else {
-      return [const Text('아직 수행평가 일정이 없습니다.')];
-    }
   }
 
   List dolist(Map<String, dynamic>? raw, DateTime now) {
@@ -374,13 +350,6 @@ class _RootpageState extends State<Rootpage> {
           .doc("시간표")
           .get()
           .then((value1) => {sg = value1.data()});
-      p1 = sg?['1교시'].toString().split(',');
-      p2 = sg?['2교시'].toString().split(',');
-      p3 = sg?['3교시'].toString().split(',');
-      p4 = sg?['4교시'].toString().split(',');
-      p5 = sg?['5교시'].toString().split(',');
-      p6 = sg?['6교시'].toString().split(',');
-      p7 = sg?['7교시'].toString().split(',');
       defwid = 20;
       defhet = 50;
       tbhet = 50;
@@ -528,7 +497,8 @@ class _RootpageState extends State<Rootpage> {
                                   color: Colors.transparent,
                                   border: Border.all(
                                     width: 1,
-                                    color: const Color.fromRGBO(211, 211, 211, 1),
+                                    color:
+                                        const Color.fromRGBO(211, 211, 211, 1),
                                   ),
                                 ),
                                 child: Column(
@@ -558,6 +528,73 @@ class _RootpageState extends State<Rootpage> {
                               ),
                             ),
                           ],
+                        ),
+                        const SizedBox(height: 15),
+                        Container(
+                          height: 160,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffDCF0FC),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.grey.withOpacity(0.15),
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)
+                              ),
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => examview()),);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Container(
+                                            height: 10,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: Colors.grey,
+                                                      blurRadius: 20),
+                                                ]),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.center,
+                                          child: Image.asset('assets/exam.png'),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '기말까지: D-${DateTime(2022, 12, 6).difference(DateTime.now()).inDays}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        Text('시험범위 확인하기'),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 15),
                         Row(
