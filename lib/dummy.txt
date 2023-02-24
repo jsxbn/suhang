@@ -1,0 +1,45 @@
+SliverAppBar(
+                        backgroundColor: Colors.transparent,
+                        pinned: true,
+                        floating: true,
+                        expandedHeight: 50.0,
+                        snap: true,
+                        elevation: 0.0,
+                        flexibleSpace: FlexibleSpaceBar.createSettings(
+                          currentExtent: currentExtent,
+                          minExtent: 0,
+                          maxExtent: maxExtent,
+                          child: ClipRect(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(
+                                sigmaX: 10,
+                                sigmaY: 10,
+                              ),
+                              child: FlexibleSpaceBar(
+                                titlePadding: EdgeInsets.zero,
+                                title: Container(
+                                  height: 50,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: const [
+                                          SizedBox(width: 20),
+                                          Text(
+                                            '_leeban',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 28,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),

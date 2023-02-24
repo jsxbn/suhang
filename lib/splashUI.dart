@@ -14,14 +14,14 @@ class splashui extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '_leeban',
+              '_samban',
               style: TextStyle(
                 fontSize: 35,
                 fontWeight: FontWeight.w900,
                 color: Colors.black,
               ),
             ),
-            Text('만든놈 전수빈'),
+            Text('develop is in progress...'),
             SizedBox(height: 5,),
             CupertinoActivityIndicator()
           ],
