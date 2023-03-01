@@ -21,7 +21,7 @@ class splashui extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            Text('develop is in progress...'),
+            Text('Closed Beta\nVersion 3.0.0'),
             SizedBox(height: 5,),
             CupertinoActivityIndicator()
           ],

@@ -11,7 +11,6 @@ import 'package:suhang/imageviewer.dart';
 import 'package:suhang/settings.dart';
 import 'package:suhang/splashUI.dart';
 import 'package:suhang/tablex.dart';
-import 'package:suhang/timetable.dart';
 import 'package:suhang/webgimal.dart';
 import 'firebase_options.dart';
 import 'package:intl/intl.dart';
