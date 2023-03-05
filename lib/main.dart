@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -7,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lottie/lottie.dart';
 import 'package:suhang/chatAI.dart';
+import 'package:suhang/advancedChatAI.dart';
 import 'package:suhang/imageviewer.dart';
 import 'package:suhang/settings.dart';
 import 'package:suhang/splashUI.dart';
@@ -62,14 +62,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        useMaterial3: true,
-        fontFamily: 'NotoSans',
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          brightness: Brightness.light,
+          useMaterial3: true,
+          fontFamily: 'NotoSans',
+        ),
+        home: Rootpage(),
       ),
-      home: Rootpage(),
     );
   }
 }
@@ -466,7 +469,8 @@ class _RootpageState extends State<Rootpage> with TickerProviderStateMixin {
                 controller: _tabController,
                 children: [
                   MainPage(),
-                  ChatPage(),
+                  AdvancedChatPage(),
+                  // ChatPage(),
                   splashui(),
                 ],
               ),

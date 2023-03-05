@@ -10,14 +10,14 @@ import 'package:flutter/services.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lottie/lottie.dart';
 
-class ChatPage extends StatefulWidget {
-  ChatPage({Key? key}) : super(key: key);
+class AdvancedChatPage extends StatefulWidget {
+  AdvancedChatPage({Key? key}) : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<AdvancedChatPage> createState() => _AdvancedChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _AdvancedChatPageState extends State<AdvancedChatPage> {
   List<Map<String, String>> _messages = [
     {
       "role": "system",
