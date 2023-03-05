@@ -21,6 +21,19 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
   List<Map<String, String>> _messages = [
     {
       "role": "system",
+      "content": '''
+Please convert the received question into a search term or search keyword format that is easy to handle by search engines, and return it. 
+The returned string must be in the same language as the question. 
+Please do not enclose the string in quotation marks and avoid using special characters as much as possible.
+Only show the converted search term.
+
+Current Date: ${DateTime.now()}
+          '''
+    },
+  ];
+  List<Map<String, String>> _searchQueryMessages = [
+    {
+      "role": "system",
       "content":
           "Your name is Quest AI, and you are an assistant who helps students with their homework."
     },
@@ -40,7 +53,7 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
           width: 150,
           height: 150,
         ),
-        Text(
+        const Text(
           'quest',
           style: TextStyle(
             color: Colors.black,
@@ -48,17 +61,16 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
             fontWeight: FontWeight.w900,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 300,
           child: Text(
-            '정확하지 않은 결과를 도출할 수 있습니다.\n사실관계 확인이 필요하며, 이로인해 발생하는 모든 책임은 사용자에게 있습니다',
+            'ADVANCED PAGE\n정확하지 않은 결과를 도출할 수 있습니다.\n사실관계 확인이 필요하며, 이로인해 발생하는 모든 책임은 사용자에게 있습니다',
             textAlign: TextAlign.center,
           ),
         ),
       ],
     );
   }
-
 
   Widget chatList() {
     return ListView.builder(
@@ -74,9 +86,9 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
             },
             child: BubbleNormal(
               isSender: false,
-              color: Color(0xFFF5F5F7),
+              color: const Color(0xFFF5F5F7),
               text: chatlist[index],
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFF27262A),
@@ -87,9 +99,9 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
         print(chatlist[index]);
         return BubbleNormal(
           isSender: true,
-          color: Color(0xFF6E62E6),
+          color: const Color(0xFF6E62E6),
           text: chatlist[index],
-          textStyle: TextStyle(
+          textStyle: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
             color: Colors.white,
@@ -98,6 +110,17 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
       },
     );
   }
+
+  // Future<Map<String, dynamic>> search(String query) async{
+  //   var client = auth.clientViaApiKey("AIzaSyCLyWsU7rX95FQIMu8bDNn2M_2RE9hAm7k");
+  //   final searchapi = CustomSearchApi(client);
+  //   final searchresult = searchapi.cse.list(
+  //     cx: "f7786ab9abe5c4536"
+  //     $fields: 
+  //   );
+  //   print(data);
+  //   return data;
+  // }
 
   void _handleSubmitted(String text) async {
     print('pressed!');
@@ -127,7 +150,7 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
       isOnline = true;
     }
     if (isOnline) {
-      const apiKey = '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';
+      const apiKey = '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';
 
       var url = Uri.https("api.openai.com", "/v1/chat/completions");
       final response = await http.post(
@@ -138,15 +161,32 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
         },
         body: json.encode({
           "model": "gpt-3.5-turbo",
-          'messages': _messages,
+          'messages': [
+            {
+              "role": "system",
+              "content": '''
+Please convert the facts to answer the received question accurately into a search term or search keyword format that is easy to handle by search engines, and return it. 
+The returned string must be in the same language as the question. 
+Please do not enclose the string in quotation marks and avoid using special characters as much as possible.
+Only show the converted search term.
+
+Current Date: ${DateTime.now()}
+          '''
+            },
+            {
+              "role": "user",
+              "content": prompt
+            }
+          ],
         }),
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> newresponse =
+        Map<String, dynamic> rawquery =
             jsonDecode(utf8.decode(response.bodyBytes));
         print(response.statusCode);
-        return newresponse['choices'][0]['message']['content'];
+        String searchquery = rawquery['choices'][0]['message']['content'];
+        return searchquery;
       } else {
         return '에러 발생:\nStatus Code ${response.statusCode}\n다시 시도해주세요.\n에러가 지속될시 문의하세요';
       }
@@ -179,30 +219,30 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   preFix(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   chatList(),
                   _isLoading
                       ? Container(
                           width: 250,
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Color(0xFFF5F5F7),
+                            color: const Color(0xFFF5F5F7),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Column(
                             children: [
                               Lottie.asset('assets/64108-loading-dots.json'),
-                              Text('로드하는동안 탭을 변경하지 마세요')
+                              const Text('로드하는동안 탭을 변경하지 마세요')
                             ],
                           ),
                         )
                       : const SizedBox(),
                   chatlist.length >= 21
-                      ? Center(
+                      ? const Center(
                           child: Text(
                           '한 대화 세션당 최대 대화 횟수는 10번입니다.\n왼쪽 하단 버튼을 눌러 새로운 세션을 시작하세요.',
                           textAlign: TextAlign.center,
@@ -238,12 +278,12 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                 child: Container(
                   height: 60,
                   width: 60,
-                  margin: EdgeInsets.only(left: 10),
+                  margin: const EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 44, 132, 233),
+                    color: const Color.fromARGB(255, 44, 132, 233),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.clear_all_rounded,
                     color: Colors.white,
                     size: 30,
@@ -262,13 +302,14 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color.fromARGB(255, 12, 11, 13)
+                            color: const Color.fromARGB(255, 12, 11, 13)
                                 .withOpacity(0.8)),
                         child: Row(
                           children: [
                             const SizedBox(width: 8),
                             Expanded(
                               child: TextField(
+                                autocorrect: false,
                                 onChanged: ((value) => setState(() {})),
                                 enabled: !_isLoading && chatlist.length < 21,
                                 controller: _textController,
@@ -277,7 +318,7 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,
                                 ),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "물어보기",
                                   hintStyle: TextStyle(
@@ -294,7 +335,7 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               child: IconButton(
                                 color: Colors.white60,
-                                icon: Icon(Icons.send),
+                                icon: const Icon(Icons.send),
                                 onPressed: _textController.text == ''
                                     ? null
                                     : () {

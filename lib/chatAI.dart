@@ -127,7 +127,7 @@ class _ChatPageState extends State<ChatPage> {
       isOnline = true;
     }
     if (isOnline) {
-      const apiKey = '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';
+      const apiKey = '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';
 
       var url = Uri.https("api.openai.com", "/v1/chat/completions");
       final response = await http.post(
@@ -269,6 +269,7 @@ class _ChatPageState extends State<ChatPage> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: TextField(
+                                autocorrect: false,
                                 onChanged: ((value) => setState(() {})),
                                 enabled: !_isLoading && chatlist.length < 21,
                                 controller: _textController,
