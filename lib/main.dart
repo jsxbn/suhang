@@ -65,6 +65,7 @@ class MyApp extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: MaterialApp(
+        
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           brightness: Brightness.light,
@@ -328,125 +329,123 @@ class _RootpageState extends State<Rootpage> with TickerProviderStateMixin {
 
   Widget MainPage() {
     return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        title: Text('ㅅㅎㅍㄱㅇㄹㅁ'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        '행신중 3-3',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w400),
-                      ),
-                      Text(
-                        '안녕하세요',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          '행신중 3-3',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w400),
                         ),
-                      ),
-                    ],
-                  ),
-                  Flexible(
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.transparent,
-                        border: Border.all(
-                          width: 1,
-                          color: const Color.fromRGBO(211, 211, 211, 1),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '다가오는 수행평가',
+                        Text(
+                          '안녕하세요',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
                           ),
-                          Text(
-                            (() {
-                              if (suData.length > 1) {
-                                return "${suData[0]['name']},${suData[1]['name']}";
-                              } else if (suData.length > 0 &&
-                                  suData[0] != 'nodata') {
-                                return suData[0]['name'];
-                              } else {
-                                return "없음";
-                              }
-                            })(),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
+                        ),
+                      ],
+                    ),
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.transparent,
+                          border: Border.all(
+                            width: 1,
+                            color: const Color.fromRGBO(211, 211, 211, 1),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              '다가오는 수행평가',
                             ),
-                          ),
-                        ],
+                            Text(
+                              (() {
+                                if (suData.length > 1) {
+                                  return "${suData[0]['name']},${suData[1]['name']}";
+                                } else if (suData.length > 0 &&
+                                    suData[0] != 'nodata') {
+                                  return suData[0]['name'];
+                                } else {
+                                  return "없음";
+                                }
+                              })(),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              const SizedBox(height: 15),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '시간표',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                  ],
+                ),
+                const SizedBox(height: 15),
+                const SizedBox(height: 15),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '시간표',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                padding: const EdgeInsets.all(15),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.transparent,
-                  border: Border.all(
-                    width: 1,
-                    color: const Color.fromRGBO(211, 211, 211, 1),
+                const SizedBox(height: 15),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.transparent,
+                    border: Border.all(
+                      width: 1,
+                      color: const Color.fromRGBO(211, 211, 211, 1),
+                    ),
                   ),
+                  child: TTableX(sg: sg),
                 ),
-                child: TTableX(sg: sg),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        '수행평가',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+                const SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          '수행평가',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  checker(suData),
-                ],
-              ),
-            ],
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    checker(suData),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

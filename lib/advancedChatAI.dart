@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:ui';
+import 'dart:convert';
 
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 import 'package:flutter/material.dart';
@@ -18,20 +20,20 @@ class AdvancedChatPage extends StatefulWidget {
 }
 
 class _AdvancedChatPageState extends State<AdvancedChatPage> {
-  List<Map<String, String>> _messages = [
-    {
-      "role": "system",
-      "content": '''
-Please convert the received question into a search term or search keyword format that is easy to handle by search engines, and return it. 
-The returned string must be in the same language as the question. 
-Please do not enclose the string in quotation marks and avoid using special characters as much as possible.
-Only show the converted search term.
+//   List<Map<String, String>> _messages = [
+//     {
+//       "role": "system",
+//       "content": '''
+// Please convert the received question into a search term or search keyword format that is easy to handle by search engines, and return it.
+// The returned string must be in the same language as the question.
+// Please do not enclose the string in quotation marks and avoid using special characters as much as possible.
+// Only show the converted search term.
 
-Current Date: ${DateTime.now()}
-          '''
-    },
-  ];
-  List<Map<String, String>> _searchQueryMessages = [
+// Current Date: ${DateTime.now()}
+//           '''
+//     },
+//   ];
+  List<Map<String, String>> _messages = [
     {
       "role": "system",
       "content":
@@ -40,9 +42,11 @@ Current Date: ${DateTime.now()}
   ];
   ScrollController _scrollController = ScrollController();
   List<String> chatlist = ['안녕하세요! \n무엇을 도와드릴까요?'];
+  String _cache = " ";
 
   final TextEditingController _textController = TextEditingController();
   bool _isLoading = false;
+  StreamController _stream = StreamController();
 
   Widget preFix() {
     return Column(
@@ -53,7 +57,7 @@ Current Date: ${DateTime.now()}
           width: 150,
           height: 150,
         ),
-        const Text(
+        Text(
           'quest',
           style: TextStyle(
             color: Colors.black,
@@ -61,7 +65,7 @@ Current Date: ${DateTime.now()}
             fontWeight: FontWeight.w900,
           ),
         ),
-        const SizedBox(
+        SizedBox(
           width: 300,
           child: Text(
             'ADVANCED PAGE\n정확하지 않은 결과를 도출할 수 있습니다.\n사실관계 확인이 필요하며, 이로인해 발생하는 모든 책임은 사용자에게 있습니다',
@@ -86,9 +90,9 @@ Current Date: ${DateTime.now()}
             },
             child: BubbleNormal(
               isSender: false,
-              color: const Color(0xFFF5F5F7),
+              color: Color(0xFFF5F5F7),
               text: chatlist[index],
-              textStyle: const TextStyle(
+              textStyle: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFF27262A),
@@ -96,12 +100,11 @@ Current Date: ${DateTime.now()}
             ),
           );
         }
-        print(chatlist[index]);
         return BubbleNormal(
           isSender: true,
-          color: const Color(0xFF6E62E6),
+          color: Color(0xFF6E62E6),
           text: chatlist[index],
-          textStyle: const TextStyle(
+          textStyle: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
             color: Colors.white,
@@ -116,34 +119,38 @@ Current Date: ${DateTime.now()}
   //   final searchapi = CustomSearchApi(client);
   //   final searchresult = searchapi.cse.list(
   //     cx: "f7786ab9abe5c4536"
-  //     $fields: 
+  //     $fields:
   //   );
   //   print(data);
   //   return data;
   // }
 
   void _handleSubmitted(String text) async {
-    print('pressed!');
     _textController.clear();
     setState(() {
       chatlist.add(text);
       _messages.add({"role": "user", "content": text});
       _isLoading = true;
     });
-    print(text);
-    String response = await getOpenAIResponse(text);
-    debugPrint(response);
+    chatlist.add('');
+    await getOpenAIResponse(text);
+    print("well-done.");
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  applychange(String response) {
     if (this.mounted) {
       setState(() {
-        _messages.add({"role": "assistant", "content": response});
-        chatlist.add(response);
-        _isLoading = false;
+        chatlist.last = response;
       });
     }
   }
 
-  Future<String> getOpenAIResponse(String prompt) async {
+  Future<void> getOpenAIResponse(String prompt) async {
     bool? isOnline;
+    String streamtext = "";
     try {
       isOnline = await InternetConnectionChecker().hasConnection;
     } catch (e) {
@@ -152,46 +159,48 @@ Current Date: ${DateTime.now()}
     if (isOnline) {
       const apiKey = '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';
 
-      var url = Uri.https("api.openai.com", "/v1/chat/completions");
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer $apiKey"
-        },
-        body: json.encode({
-          "model": "gpt-3.5-turbo",
-          'messages': [
-            {
-              "role": "system",
-              "content": '''
-Please convert the facts to answer the received question accurately into a search term or search keyword format that is easy to handle by search engines, and return it. 
-The returned string must be in the same language as the question. 
-Please do not enclose the string in quotation marks and avoid using special characters as much as possible.
-Only show the converted search term.
-
-Current Date: ${DateTime.now()}
-          '''
-            },
-            {
-              "role": "user",
-              "content": prompt
-            }
-          ],
-        }),
+      var url = Uri.https(
+        "api.openai.com",
+        "/v1/chat/completions",
       );
+      http.StreamedRequest request = http.StreamedRequest(
+        'POST',
+        url,
+      )
+        ..headers['Accept'] = 'text/event-stream'
+        ..headers['Content-Type'] = 'application/json'
+        ..headers['Authorization'] = 'Bearer $apiKey';
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> rawquery =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        print(response.statusCode);
-        String searchquery = rawquery['choices'][0]['message']['content'];
-        return searchquery;
+      request.sink.add(utf8.encode(json.encode({
+        "model": "gpt-3.5-turbo",
+        "messages": _messages,
+        "stream": true,
+      })));
+      request.sink.close();
+      http.StreamedResponse finalresponse = await request.send();
+
+      if (finalresponse.statusCode == 200) {
+        finalresponse.stream.listen((data) {
+          String utfdecoded = utf8.decode(data);
+          if (utfdecoded.contains('content')){
+            print(utfdecoded);
+            String content = jsonDecode(utfdecoded.substring(6))["choices"][0]["delta"]
+                ["content"];
+            print(content);
+            streamtext +=content;
+            print(streamtext);
+          applychange(streamtext);
+          }
+          if(utfdecoded.contains('DONE')){
+            _messages.add({"role": "assistant", "content": streamtext});
+          }
+        });
       } else {
-        return '에러 발생:\nStatus Code ${response.statusCode}\n다시 시도해주세요.\n에러가 지속될시 문의하세요';
+        applychange(
+            '에러 발생:\nStatus Code ${finalresponse.statusCode}\n다시 시도해주세요.\n에러가 지속될시 문의하세요');
       }
     } else {
-      return '인터넷 연결 안됨';
+      applychange('인터넷 연결 안됨');
     }
   }
 
@@ -199,7 +208,6 @@ Current Date: ${DateTime.now()}
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        print('widget binding');
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 200),
@@ -219,32 +227,16 @@ Current Date: ${DateTime.now()}
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     height: 20,
                   ),
                   preFix(),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                   chatList(),
-                  _isLoading
-                      ? Container(
-                          width: 250,
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F7),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            children: [
-                              Lottie.asset('assets/64108-loading-dots.json'),
-                              const Text('로드하는동안 탭을 변경하지 마세요')
-                            ],
-                          ),
-                        )
-                      : const SizedBox(),
-                  chatlist.length >= 21
-                      ? const Center(
+                  chatlist.length >= 33
+                      ? Center(
                           child: Text(
-                          '한 대화 세션당 최대 대화 횟수는 10번입니다.\n왼쪽 하단 버튼을 눌러 새로운 세션을 시작하세요.',
+                          '한 대화 세션당 최대 대화 횟수는 16번입니다.\n왼쪽 하단 버튼을 눌러 새로운 세션을 시작하세요.',
                           textAlign: TextAlign.center,
                         ))
                       : const SizedBox(),
@@ -270,7 +262,6 @@ Current Date: ${DateTime.now()}
                             "Your name is Quest AI, and you are an assistant who helps students with their homework."
                       },
                     ];
-                    ;
                     chatlist = ['새로운 대화 세션입니다.\n무엇을 도와드릴까요?'];
                     _isLoading = false;
                   });
@@ -278,12 +269,12 @@ Current Date: ${DateTime.now()}
                 child: Container(
                   height: 60,
                   width: 60,
-                  margin: const EdgeInsets.only(left: 10),
+                  margin: EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 44, 132, 233),
+                    color: Color.fromARGB(255, 44, 132, 233),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.clear_all_rounded,
                     color: Colors.white,
                     size: 30,
@@ -302,7 +293,7 @@ Current Date: ${DateTime.now()}
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: const Color.fromARGB(255, 12, 11, 13)
+                            color: Color.fromARGB(255, 12, 11, 13)
                                 .withOpacity(0.8)),
                         child: Row(
                           children: [
@@ -311,14 +302,14 @@ Current Date: ${DateTime.now()}
                               child: TextField(
                                 autocorrect: false,
                                 onChanged: ((value) => setState(() {})),
-                                enabled: !_isLoading && chatlist.length < 21,
+                                enabled: !_isLoading && chatlist.length < 33,
                                 controller: _textController,
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,
                                 ),
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "물어보기",
                                   hintStyle: TextStyle(
@@ -335,7 +326,7 @@ Current Date: ${DateTime.now()}
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               child: IconButton(
                                 color: Colors.white60,
-                                icon: const Icon(Icons.send),
+                                icon: Icon(Icons.send),
                                 onPressed: _textController.text == ''
                                     ? null
                                     : () {
