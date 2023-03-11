@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 import 'package:flutter/material.dart';
+import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,40 +14,35 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lottie/lottie.dart';
 
 class AdvancedChatPage extends StatefulWidget {
-  AdvancedChatPage({Key? key}) : super(key: key);
+  const AdvancedChatPage({Key? key}) : super(key: key);
 
   @override
   State<AdvancedChatPage> createState() => _AdvancedChatPageState();
 }
 
 class _AdvancedChatPageState extends State<AdvancedChatPage> {
-//   List<Map<String, String>> _messages = [
-//     {
-//       "role": "system",
-//       "content": '''
-// Please convert the received question into a search term or search keyword format that is easy to handle by search engines, and return it.
-// The returned string must be in the same language as the question.
-// Please do not enclose the string in quotation marks and avoid using special characters as much as possible.
-// Only show the converted search term.
-
-// Current Date: ${DateTime.now()}
-//           '''
-//     },
-//   ];
+  int _selected = 1;
   List<Map<String, String>> _messages = [
     {
       "role": "system",
-      "content":
-          "Your name is Quest AI, and you are an assistant who helps students with their homework."
+      "content": '''
+Your name is Quest AI.
+'''
     },
   ];
   ScrollController _scrollController = ScrollController();
-  List<String> chatlist = ['안녕하세요! \n무엇을 도와드릴까요?'];
+  List<String> chatlist = ['SuVmvqUIRP안녕하세요! \n무엇을 도와드릴까요?'];
   String _cache = " ";
 
   final TextEditingController _textController = TextEditingController();
   bool _isLoading = false;
   StreamController _stream = StreamController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   Widget preFix() {
     return Column(
@@ -57,7 +53,7 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
           width: 150,
           height: 150,
         ),
-        Text(
+        const Text(
           'quest',
           style: TextStyle(
             color: Colors.black,
@@ -65,10 +61,10 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
             fontWeight: FontWeight.w900,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 300,
           child: Text(
-            'ADVANCED PAGE\n정확하지 않은 결과를 도출할 수 있습니다.\n사실관계 확인이 필요하며, 이로인해 발생하는 모든 책임은 사용자에게 있습니다',
+            '정확하지 않은 결과를 도출할 수 있습니다.\n사실관계 확인이 필요하며, 이로인해 발생하는 모든 책임은 사용자에게 있습니다',
             textAlign: TextAlign.center,
           ),
         ),
@@ -77,12 +73,13 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
   }
 
   Widget chatList() {
-    return ListView.builder(
+    return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: chatlist.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 5),
       itemBuilder: (context, index) {
-        if (index % 2 == 0) {
+        if (chatlist[index].contains('SuVmvqUIRP')) {
           return GestureDetector(
             onLongPress: () async {
               await Clipboard.setData(ClipboardData(text: chatlist[index]));
@@ -90,9 +87,9 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
             },
             child: BubbleNormal(
               isSender: false,
-              color: Color(0xFFF5F5F7),
-              text: chatlist[index],
-              textStyle: TextStyle(
+              color: const Color(0xFFF5F5F7),
+              text: chatlist[index].substring(10),
+              textStyle: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFF27262A),
@@ -100,11 +97,17 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
             ),
           );
         }
+        if (chatlist[index].contains('SEqVNDGu')) {
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: Text(chatlist[index].substring(8)),
+          );
+        }
         return BubbleNormal(
           isSender: true,
-          color: Color(0xFF6E62E6),
-          text: chatlist[index],
-          textStyle: TextStyle(
+          color: const Color(0xFF6E62E6),
+          text: chatlist[index].substring(11),
+          textStyle: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
             color: Colors.white,
@@ -114,38 +117,98 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
     );
   }
 
-  // Future<Map<String, dynamic>> search(String query) async{
-  //   var client = auth.clientViaApiKey("AIzaSyCLyWsU7rX95FQIMu8bDNn2M_2RE9hAm7k");
-  //   final searchapi = CustomSearchApi(client);
-  //   final searchresult = searchapi.cse.list(
-  //     cx: "f7786ab9abe5c4536"
-  //     $fields:
-  //   );
-  //   print(data);
-  //   return data;
-  // }
+  Future<List<Map<String, dynamic>>> search(String query) async {
+    var url = Uri.parse(
+        "https://api.bing.microsoft.com/v7.0/search?q=$query&count=5");
+    http.Response response = await http.get(
+      url,
+      headers: {
+        'Ocp-Apim-Subscription-Key': "cc34dfd75fd34d73b854cc5d48ab3c07",
+        "Content-Type": "application/json"
+      },
+    );
+    return (json.decode(utf8.decode(response.bodyBytes))["webPages"]["value"]
+            as List)
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+  }
 
   void _handleSubmitted(String text) async {
     _textController.clear();
     setState(() {
-      chatlist.add(text);
-      _messages.add({"role": "user", "content": text});
+      chatlist.add("VmBuiPuEDSO$text");
       _isLoading = true;
     });
-    chatlist.add('');
     await getOpenAIResponse(text);
-    print("well-done.");
-    setState(() {
-      _isLoading = false;
-    });
+    setState(() {});
   }
 
   applychange(String response) {
     if (this.mounted) {
       setState(() {
-        chatlist.last = response;
+        chatlist.last = "SuVmvqUIRP$response";
       });
     }
+  }
+
+  String subOnCharecter(
+      {required String str, required int from, required int to}) {
+    var runes = str.runes.toList();
+    String result = '';
+    for (var i = from; i < to; i++) {
+      result = result + String.fromCharCode(runes[i]);
+    }
+    return result;
+  }
+
+  Future<String> extractQuery(String apiKey, String text) async {
+    var url = Uri.https(
+      "api.openai.com",
+      "/v1/chat/completions",
+    );
+
+    var response = await http.post(url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $apiKey',
+        },
+        body: jsonEncode({
+          "model": "gpt-3.5-turbo",
+          "messages": [
+            {
+              "role": "system",
+              "content": '''
+Please convert the received question into a search term or search keyword format that is easy to handle by search engines, and return it. 
+Please do not enclose the string in quotation marks and avoid using special characters as much as possible.
+Only show the converted search term.
+Current date: ${DateTime.now()}
+the question you received is:
+                '''
+            },
+            {'role': 'user', 'content': "\"$text\""}
+          ]
+        }));
+    return jsonDecode(utf8.decode(response.bodyBytes))["choices"][0]["message"]
+        ["content"];
+  }
+
+  searchingwhat(String searchquery) {
+    chatlist.add("SEqVNDGu${searchquery} 검색중...");
+    setState(() {});
+  }
+
+  String formalResutls(List<Map<String, dynamic>> results) {
+    String formed = results
+        .map((r) => "${results.indexOf(r)}. ${r['name']}, ${r['snippet']}")
+        .join('\n');
+    return formed;
+  }
+
+  String makesource(List<Map<String, dynamic>> results){
+    String source= results
+        .map((r) => "${results.indexOf(r)}. ${r['name']}, ${r['url']}")
+        .join('\n');
+    return source;
   }
 
   Future<void> getOpenAIResponse(String prompt) async {
@@ -158,49 +221,131 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
     }
     if (isOnline) {
       const apiKey = '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';
+      String formresults = "";
+      String sourceresults = "";
+      late http.StreamedRequest request;
+      if (_selected == 2) {
+        String searchquery = await extractQuery(apiKey, prompt);
+        searchingwhat(searchquery);
+        List<Map<String, dynamic>> searchresults =
+            await search(searchquery) as List<Map<String, dynamic>>;
+        chatlist.add('SuVmvqUIRP');
 
-      var url = Uri.https(
-        "api.openai.com",
-        "/v1/chat/completions",
-      );
-      http.StreamedRequest request = http.StreamedRequest(
-        'POST',
-        url,
-      )
-        ..headers['Accept'] = 'text/event-stream'
-        ..headers['Content-Type'] = 'application/json'
-        ..headers['Authorization'] = 'Bearer $apiKey';
+        formresults = formalResutls(searchresults);
+        sourceresults = makesource(searchresults);
+        var url = Uri.https(
+          "api.openai.com",
+          "/v1/chat/completions",
+        );
+        request = http.StreamedRequest(
+          'POST',
+          url,
+        )
+          ..headers['Accept'] = 'text/event-stream'
+          ..headers['Content-Type'] = 'application/json'
+          ..headers['Authorization'] = 'Bearer $apiKey';
+        request.sink.add(utf8.encode(json.encode({
+          "model": "gpt-3.5-turbo",
+          "messages": [
+            {
+              "role": "system",
+              "content": '''
+Using the following guidelines, please create a newly organized text in step-by-step fashion.
+(1) Use the given references related to the question to create a completely new text.
+(1-1) The context should be as smooth as possible.
+(1-2) Use vocabulary that is easy to read.
+(1-3) It is okay to mix the context back and forth.
+(1-4) responde as Korean.
+(2) Mark the relevant reference number in the form of a comment [number] at the end of the word, sentence, or paragraph.
+(2-1) Always include a reference for proper nouns.
+(2-2) e.g. His name is Moon Jae-In[1][3], and he was South Korea's president[2].
+(3) Use the following criteria for references.
+(3-1) Do not use subjective or biased references.
+(3-2) Do not use uncertain or factually unsupported references.
+(3-3) Try to avoid using references other than Wikipedia, media, government, or corporate websites.
+(3-4) Do not make up stories when there are no references available.
+The given references are as follows:
+${formresults}
+the question is:
+'''
+            },
+            {"role": "user", "content": prompt}
+          ],
+          "stream": true,
+        })));
+      } else {
+        chatlist.add('SuVmvqUIRP');
+        _messages.add({"role": "user", "content": prompt});
+        var url = Uri.https(
+          "api.openai.com",
+          "/v1/chat/completions",
+        );
+        request = http.StreamedRequest(
+          'POST',
+          url,
+        )
+          ..headers['Accept'] = 'text/event-stream'
+          ..headers['Content-Type'] = 'application/json'
+          ..headers['Authorization'] = 'Bearer $apiKey';
 
-      request.sink.add(utf8.encode(json.encode({
-        "model": "gpt-3.5-turbo",
-        "messages": _messages,
-        "stream": true,
-      })));
+        request.sink.add(utf8.encode(json.encode({
+          "model": "gpt-3.5-turbo",
+          "messages": _messages,
+          "stream": true,
+        })));
+      }
       request.sink.close();
       http.StreamedResponse finalresponse = await request.send();
 
       if (finalresponse.statusCode == 200) {
         finalresponse.stream.listen((data) {
           String utfdecoded = utf8.decode(data);
-          if (utfdecoded.contains('content')){
-            print(utfdecoded);
-            String content = jsonDecode(utfdecoded.substring(6))["choices"][0]["delta"]
-                ["content"];
-            print(content);
-            streamtext +=content;
-            print(streamtext);
-          applychange(streamtext);
+          if (utfdecoded.contains('content')) {
+            String jsoned = "";
+            utfdecoded.split("\n").forEach(
+              (element) {
+                if (element.contains("data") && element.contains("content")) {
+                  jsoned = element.substring(6);
+                }
+              },
+            );
+            try {
+              String content =
+                  jsonDecode(jsoned)["choices"][0]["delta"]["content"];
+              streamtext += content;
+            } catch (e) {
+              print("SPLIT: ${utfdecoded.split("\n")}");
+            }
+            applychange(streamtext);
           }
-          if(utfdecoded.contains('DONE')){
-            _messages.add({"role": "assistant", "content": streamtext});
+          if (utfdecoded.contains('DONE')) {
+            setState(() {
+              _isLoading = false;
+            });
+            if (_selected == 2) {
+              streamtext += '''
+\n==========
+참조:
+$sourceresults
+''';
+              applychange(streamtext);
+            } else {
+              _messages.add({"role": "assistant", "content": streamtext});
+            }
           }
         });
       } else {
         applychange(
             '에러 발생:\nStatus Code ${finalresponse.statusCode}\n다시 시도해주세요.\n에러가 지속될시 문의하세요');
+        setState(() {
+          _isLoading = false;
+        });
       }
     } else {
       applychange('인터넷 연결 안됨');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -227,14 +372,69 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   preFix(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  CustomSlidingSegmentedControl<int>(
+                    initialValue: 1,
+                    children: {
+                      1: const Text(
+                        '채팅',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      2: const Text(
+                        '검색',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      )
+                    },
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    thumbDecoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4.0,
+                          spreadRadius: 1.0,
+                          offset: const Offset(
+                            0.0,
+                            2.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInToLinear,
+                    onValueChanged: (v) {
+                      setState(() {
+                        _selected = v;
+                        _messages = [
+                          {
+                            "role": "system",
+                            "content": '''
+Your name is Quest AI.
+'''
+                          },
+                        ];
+                        chatlist = _selected == 1
+                            ? ['SuVmvqUIRP새로운 대화 세션입니다.\n무엇을 도와드릴까요?']
+                            : [
+                                'SuVmvqUIRP검색 모드입니다.\n검색 엔진과 연동하여 비교적 정확하고, 최신의 정보를 제공합니다.\n이전 채팅 내용을 기억할 수 없습니다.'
+                              ];
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   chatList(),
                   chatlist.length >= 33
-                      ? Center(
+                      ? const Center(
                           child: Text(
                           '한 대화 세션당 최대 대화 횟수는 16번입니다.\n왼쪽 하단 버튼을 눌러 새로운 세션을 시작하세요.',
                           textAlign: TextAlign.center,
@@ -258,23 +458,28 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                     _messages = [
                       {
                         "role": "system",
-                        "content":
-                            "Your name is Quest AI, and you are an assistant who helps students with their homework."
+                        "content": '''
+Your name is Quest AI.
+'''
                       },
                     ];
-                    chatlist = ['새로운 대화 세션입니다.\n무엇을 도와드릴까요?'];
+                    chatlist = _selected == 1
+                        ? ['SuVmvqUIRP새로운 대화 세션입니다.\n무엇을 도와드릴까요?']
+                        : [
+                            'SuVmvqUIRP검색 모드입니다.\n검색 엔진과 연동하여 비교적 정확하고, 최신의 정보를 제공합니다.\n이전 채팅 내용을 기억할 수 없습니다.'
+                          ];
                     _isLoading = false;
                   });
                 },
                 child: Container(
                   height: 60,
                   width: 60,
-                  margin: EdgeInsets.only(left: 10),
+                  margin: const EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 44, 132, 233),
+                    color: const Color.fromARGB(255, 44, 132, 233),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.clear_all_rounded,
                     color: Colors.white,
                     size: 30,
@@ -293,7 +498,7 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color.fromARGB(255, 12, 11, 13)
+                            color: const Color.fromARGB(255, 12, 11, 13)
                                 .withOpacity(0.8)),
                         child: Row(
                           children: [
@@ -309,7 +514,7 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,
                                 ),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "물어보기",
                                   hintStyle: TextStyle(
@@ -326,7 +531,7 @@ class _AdvancedChatPageState extends State<AdvancedChatPage> {
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               child: IconButton(
                                 color: Colors.white60,
-                                icon: Icon(Icons.send),
+                                icon: const Icon(Icons.send),
                                 onPressed: _textController.text == ''
                                     ? null
                                     : () {

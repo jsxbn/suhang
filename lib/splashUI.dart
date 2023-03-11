@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class splashui extends StatelessWidget {
-  const splashui({Key? key}) : super(key: key);
+  final bool indicator;
+  const splashui({
+    Key? key,
+    required this.indicator,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,7 @@ class splashui extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               '_samban',
               style: TextStyle(
                 fontSize: 35,
@@ -21,9 +25,14 @@ class splashui extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            Text('Closed Beta\nVersion 3.0.0'),
-            SizedBox(height: 5,),
-            CupertinoActivityIndicator()
+            const Text(
+              '행신중 3-3\nVersion 3.5.0',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            indicator ? const CupertinoActivityIndicator() : const SizedBox()
           ],
         ),
       ),

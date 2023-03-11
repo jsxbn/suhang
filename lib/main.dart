@@ -459,7 +459,7 @@ class _RootpageState extends State<Rootpage> with TickerProviderStateMixin {
         future: _processdata(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const splashui();
+            return splashui(indicator: true);
           }
           if (snapshot.hasData) {
             return Scaffold(
@@ -470,7 +470,7 @@ class _RootpageState extends State<Rootpage> with TickerProviderStateMixin {
                   MainPage(),
                   AdvancedChatPage(),
                   // ChatPage(),
-                  splashui(),
+                  splashui(indicator: false),
                 ],
               ),
               // body: [MainPage(), ChatPage(), splashui()]
