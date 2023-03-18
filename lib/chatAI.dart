@@ -237,7 +237,7 @@ the question you received is:
   }
 
   Future<String> getOpenAIResponse(String prompt) async {
-      const apiKey = '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';
+      const apiKey = 'sk-myasssssssssssss';
       String formresults = "";
       String sourceresults = "";
       http.Response response;

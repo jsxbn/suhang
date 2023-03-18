@@ -228,7 +228,7 @@ the question you received is:
       isOnline = true;
     }
     if (isOnline) {
-      const apiKey = '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';
+      const apiKey = 'sk-myasssssssss';
       String formresults = "";
       String sourceresults = "";
       late http.StreamedRequest request;
