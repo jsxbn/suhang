@@ -117,7 +117,7 @@ Your name is Quest AI.
     );
   }
 
-  Future<List<Map<String, dynamic>>> search(String query) async {
+  search(String query) async {
     var url = Uri.parse(
         "https://api.bing.microsoft.com/v7.0/search?q=$query&count=5");
     http.Response response = await http.get(
@@ -127,10 +127,14 @@ Your name is Quest AI.
         "Content-Type": "application/json"
       },
     );
-    return (json.decode(utf8.decode(response.bodyBytes))["webPages"]["value"]
-            as List)
-        .map((e) => e as Map<String, dynamic>)
-        .toList();
+    if (response.statusCode == 200) {
+      return (json.decode(utf8.decode(response.bodyBytes))["webPages"]["value"]
+              as List)
+          .map((e) => e as Map<String, dynamic>)
+          .toList();
+    } else {
+      return json.decode(utf8.decode(response.bodyBytes));
+    }
   }
 
   void _handleSubmitted(String text) async {
@@ -188,12 +192,16 @@ the question you received is:
             {'role': 'user', 'content': "\"$text\""}
           ]
         }));
-    return jsonDecode(utf8.decode(response.bodyBytes))["choices"][0]["message"]
-        ["content"];
+    if (response.statusCode == 200) {
+      return jsonDecode(utf8.decode(response.bodyBytes))["choices"][0]
+          ["message"]["content"];
+    } else {
+      return "";
+    }
   }
 
   searchingwhat(String searchquery) {
-    chatlist.add("SEqVNDGu${searchquery} 검색중...");
+    chatlist.add("SEqVNDGu$searchquery");
     setState(() {});
   }
 
@@ -204,8 +212,8 @@ the question you received is:
     return formed;
   }
 
-  String makesource(List<Map<String, dynamic>> results){
-    String source= results
+  String makesource(List<Map<String, dynamic>> results) {
+    String source = results
         .map((r) => "${results.indexOf(r)}. ${r['name']}, ${r['url']}")
         .join('\n');
     return source;
@@ -220,19 +228,26 @@ the question you received is:
       isOnline = true;
     }
     if (isOnline) {
-      const apiKey = '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';
+      const apiKey = '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';
       String formresults = "";
       String sourceresults = "";
       late http.StreamedRequest request;
       if (_selected == 2) {
+        searchingwhat("검색 키워드 추출중...");
         String searchquery = await extractQuery(apiKey, prompt);
-        searchingwhat(searchquery);
-        List<Map<String, dynamic>> searchresults =
-            await search(searchquery) as List<Map<String, dynamic>>;
+        searchingwhat("$searchquery 검색중...");
+        try {
+          List<Map<String, dynamic>> searchresults =
+              await search(searchquery) as List<Map<String, dynamic>>;
+          formresults = formalResutls(searchresults);
+          sourceresults = makesource(searchresults);
+        } catch (e) {
+          formresults = "there was an search engine error";
+          sourceresults = "검색 엔진 에러";
+        }
+        searchingwhat("답변을 생성하는중...");
         chatlist.add('SuVmvqUIRP');
 
-        formresults = formalResutls(searchresults);
-        sourceresults = makesource(searchresults);
         var url = Uri.https(
           "api.openai.com",
           "/v1/chat/completions",
@@ -274,6 +289,7 @@ the question is:
           "stream": true,
         })));
       } else {
+        searchingwhat("답변을 생성하는중...");
         chatlist.add('SuVmvqUIRP');
         _messages.add({"role": "user", "content": prompt});
         var url = Uri.https(
@@ -412,6 +428,7 @@ $sourceresults
                     curve: Curves.easeInToLinear,
                     onValueChanged: (v) {
                       setState(() {
+                        _isLoading = false;
                         _selected = v;
                         _messages = [
                           {
@@ -433,10 +450,10 @@ Your name is Quest AI.
                     height: 10,
                   ),
                   chatList(),
-                  chatlist.length >= 33
+                  _selected == 1 && chatlist.length >= 13
                       ? const Center(
                           child: Text(
-                          '한 대화 세션당 최대 대화 횟수는 16번입니다.\n왼쪽 하단 버튼을 눌러 새로운 세션을 시작하세요.',
+                          '한 대화 세션당 최대 대화 횟수는 4번입니다.\n왼쪽 하단 버튼을 눌러 새로운 세션을 시작하세요.',
                           textAlign: TextAlign.center,
                         ))
                       : const SizedBox(),
@@ -507,7 +524,8 @@ Your name is Quest AI.
                               child: TextField(
                                 autocorrect: false,
                                 onChanged: ((value) => setState(() {})),
-                                enabled: !_isLoading && chatlist.length < 33,
+                                enabled: !_isLoading &&
+                                    (chatlist.length < 13 || _selected == 2),
                                 controller: _textController,
                                 style: const TextStyle(
                                   fontSize: 15,

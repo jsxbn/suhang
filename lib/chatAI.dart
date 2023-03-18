@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
+import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  int _selected = 1;
   List<Map<String, String>> _messages = [
     {
       "role": "system",
@@ -55,10 +57,66 @@ class _ChatPageState extends State<ChatPage> {
             textAlign: TextAlign.center,
           ),
         ),
+        SizedBox(height: 5),
+        CustomSlidingSegmentedControl<int>(
+          initialValue: 1,
+          children: {
+            1: const Text(
+              '채팅',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+            2: const Text(
+              '검색',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            )
+          },
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          thumbDecoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4.0,
+                spreadRadius: 1.0,
+                offset: const Offset(
+                  0.0,
+                  2.0,
+                ),
+              ),
+            ],
+          ),
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInToLinear,
+          onValueChanged: (v) {
+            setState(() {
+              _isLoading = false;
+              _selected = v;
+              _messages = [
+                {
+                  "role": "system",
+                  "content": '''
+Your name is Quest AI.
+'''
+                },
+              ];
+              chatlist = _selected == 1
+                  ? ['새로운 대화 세션입니다.\n무엇을 도와드릴까요?']
+                  : [
+                      '검색 모드입니다.\n검색 엔진과 연동하여 비교적 정확하고, 최신의 정보를 제공합니다.\n이전 채팅 내용을 기억할 수 없습니다.'
+                    ];
+            });
+          },
+        ),
+        SizedBox(
+          height: 10,
+        ),
       ],
     );
   }
-
 
   Widget chatList() {
     return ListView.builder(
@@ -112,47 +170,161 @@ class _ChatPageState extends State<ChatPage> {
     debugPrint(response);
     if (this.mounted) {
       setState(() {
-        _messages.add({"role": "assistant", "content": response});
-        chatlist.add(response);
         _isLoading = false;
       });
     }
   }
 
-  Future<String> getOpenAIResponse(String prompt) async {
-    bool? isOnline;
-    try {
-      isOnline = await InternetConnectionChecker().hasConnection;
-    } catch (e) {
-      isOnline = true;
-    }
-    if (isOnline) {
-      const apiKey = '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';
+  Future<String> extractQuery(String apiKey, String text) async {
+    var url = Uri.https(
+      "api.openai.com",
+      "/v1/chat/completions",
+    );
 
-      var url = Uri.https("api.openai.com", "/v1/chat/completions");
-      final response = await http.post(
-        url,
+    var response = await http.post(url,
         headers: {
           'Content-Type': 'application/json',
-          "Authorization": "Bearer $apiKey"
+          'Authorization': 'Bearer $apiKey',
         },
-        body: json.encode({
+        body: jsonEncode({
           "model": "gpt-3.5-turbo",
-          'messages': _messages,
-        }),
-      );
+          "messages": [
+            {
+              "role": "system",
+              "content": '''
+Please convert the received question into a search term or search keyword format that is easy to handle by search engines, and return it. 
+Please do not enclose the string in quotation marks and avoid using special characters as much as possible.
+Only show the converted search term.
+Current date: ${DateTime.now()}
+the question you received is:
+                '''
+            },
+            {'role': 'user', 'content': "\"$text\""}
+          ]
+        }));
+    return jsonDecode(utf8.decode(response.bodyBytes))["choices"][0]["message"]
+        ["content"];
+  }
+
+  Future<List<Map<String, dynamic>>> search(String query) async {
+    var url = Uri.parse(
+        "https://api.bing.microsoft.com/v7.0/search?q=$query&count=5");
+    http.Response response = await http.get(
+      url,
+      headers: {
+        'Ocp-Apim-Subscription-Key': "cc34dfd75fd34d73b854cc5d48ab3c07",
+        "Content-Type": "application/json"
+      },
+    );
+    return (json.decode(utf8.decode(response.bodyBytes))["webPages"]["value"]
+            as List)
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+  }
+
+  String formalResutls(List<Map<String, dynamic>> results) {
+    String formed = results
+        .map((r) => "${results.indexOf(r)}. ${r['name']}, ${r['snippet']}")
+        .join('\n');
+    return formed;
+  }
+
+  String makesource(List<Map<String, dynamic>> results) {
+    String source = results
+        .map((r) => "${results.indexOf(r)}. ${r['name']}, ${r['url']}")
+        .join('\n');
+    return source;
+  }
+
+  Future<String> getOpenAIResponse(String prompt) async {
+      const apiKey = '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';
+      String formresults = "";
+      String sourceresults = "";
+      http.Response response;
+      if (_selected == 2) {
+        String searchquery = await extractQuery(apiKey, prompt);
+        List<Map<String, dynamic>> searchresults =
+            await search(searchquery) as List<Map<String, dynamic>>;
+        formresults = formalResutls(searchresults);
+        sourceresults = makesource(searchresults);
+        var url = Uri.https("api.openai.com", "/v1/chat/completions");
+        response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer $apiKey"
+          },
+          body: json.encode({
+            "model": "gpt-3.5-turbo",
+            'messages': [
+              {
+                "role": "system",
+                "content": '''
+Using the following guidelines, please create a newly organized text in step-by-step fashion.
+(1) Use the given references related to the question to create a completely new text.
+(1-1) The context should be as smooth as possible.
+(1-2) Use vocabulary that is easy to read.
+(1-3) It is okay to mix the context back and forth.
+(1-4) responde as Korean.
+(2) Mark the relevant reference number in the form of a comment [number] at the end of the word, sentence, or paragraph.
+(2-1) Always include a reference for proper nouns.
+(2-2) e.g. His name is Moon Jae-In[1][3], and he was South Korea's president[2].
+(3) Use the following criteria for references.
+(3-1) Do not use subjective or biased references.
+(3-2) Do not use uncertain or factually unsupported references.
+(3-3) Try to avoid using references other than Wikipedia, media, government, or corporate websites.
+(3-4) Do not make up stories when there are no references available.
+The given references are as follows:
+${formresults}
+the question is:
+'''
+              },
+              {"role": "user", "content": prompt}
+            ],
+          }),
+        );
+      } else {
+        var url = Uri.https("api.openai.com", "/v1/chat/completions");
+        response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer $apiKey"
+          },
+          body: json.encode({
+            "model": "gpt-3.5-turbo",
+            'messages': _messages,
+          }),
+        );
+      }
 
       if (response.statusCode == 200) {
         Map<String, dynamic> newresponse =
             jsonDecode(utf8.decode(response.bodyBytes));
         print(response.statusCode);
-        return newresponse['choices'][0]['message']['content'];
+        if (_selected == 1) {
+          _messages.add({
+            "role": "assistant",
+            "content": newresponse['choices'][0]['message']['content']
+          });
+          chatlist.add(newresponse['choices'][0]['message']['content']);
+          return newresponse['choices'][0]['message']['content'];
+        } else {
+          chatlist.add('''${newresponse['choices'][0]['message']['content']}
+==========
+참조:
+$sourceresults
+''');
+          return '''${newresponse['choices'][0]['message']['content']}
+==========
+참조:
+$sourceresults
+''';
+        }
       } else {
         return '에러 발생:\nStatus Code ${response.statusCode}\n다시 시도해주세요.\n에러가 지속될시 문의하세요';
       }
-    } else {
-      return '인터넷 연결 안됨';
-    }
+
   }
 
   @override
@@ -201,10 +373,10 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                         )
                       : const SizedBox(),
-                  chatlist.length >= 21
+                  chatlist.length >= 9
                       ? Center(
                           child: Text(
-                          '한 대화 세션당 최대 대화 횟수는 10번입니다.\n왼쪽 하단 버튼을 눌러 새로운 세션을 시작하세요.',
+                          '한 대화 세션당 최대 대화 횟수는 4번입니다.\n왼쪽 하단 버튼을 눌러 새로운 세션을 시작하세요.',
                           textAlign: TextAlign.center,
                         ))
                       : const SizedBox(),
@@ -271,7 +443,7 @@ class _ChatPageState extends State<ChatPage> {
                               child: TextField(
                                 autocorrect: false,
                                 onChanged: ((value) => setState(() {})),
-                                enabled: !_isLoading && chatlist.length < 21,
+                                enabled: !_isLoading && chatlist.length < 9,
                                 controller: _textController,
                                 style: const TextStyle(
                                   fontSize: 15,

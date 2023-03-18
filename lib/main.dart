@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lottie/lottie.dart';
 import 'package:suhang/chatAI.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:suhang/advancedChatAI.dart';
 import 'package:suhang/imageviewer.dart';
 import 'package:suhang/settings.dart';
@@ -468,8 +470,8 @@ class _RootpageState extends State<Rootpage> with TickerProviderStateMixin {
                 controller: _tabController,
                 children: [
                   MainPage(),
-                  AdvancedChatPage(),
-                  // ChatPage(),
+                  !kIsWeb? AdvancedChatPage()
+                  :ChatPage(),
                   splashui(indicator: false),
                 ],
               ),

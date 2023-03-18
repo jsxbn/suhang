@@ -26,7 +26,7 @@ class splashui extends StatelessWidget {
               ),
             ),
             const Text(
-              '행신중 3-3\nVersion 3.5.0',
+              '행신중 3-3\nVersion 3.5.7',
               textAlign: TextAlign.center,
             ),
             const SizedBox(
